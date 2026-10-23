@@ -1,0 +1,126 @@
+/*
+ * Solid paper, a hairline underneath, no blur and not sticky. The poster is a
+ * printed sheet; a floating translucent bar is the wrong object entirely.
+ */
+.nav {
+  position: relative;
+  z-index: var(--z-nav);
+  background: var(--c-paper);
+  border-bottom: 1px solid var(--c-rule-strong);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  padding: var(--s-4) var(--gutter);
+  max-width: 90rem;
+  margin-inline: auto;
+}
+
+.wordmark {
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-variation-settings: 'wdth' 75;
+  letter-spacing: -0.03em;
+  font-size: 1.5rem;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* ------------------------------------------------------------- mobile */
+
+.toggle {
+  display: inline-block;
+  background: none;
+  border: 1px solid var(--c-ink);
+  padding: var(--s-2) var(--s-4);
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.toggle:hover {
+  background: var(--c-ink);
+  color: var(--c-paper);
+}
+
+.links {
+  display: none;
+  flex-basis: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--s-1);
+  padding-top: var(--s-4);
+}
+
+.open {
+  display: flex;
+}
+
+.link,
+.cta {
+  font-family: var(--f-mono);
+  /* 13px is the floor; the old build ran nav links at 11px. */
+  font-size: var(--t-sm);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: var(--s-3) 0;
+}
+
+.link[aria-current='page'] {
+  color: var(--c-green);
+}
+
+.link:hover {
+  color: var(--c-green);
+}
+
+.cta {
+  margin-top: var(--s-2);
+  background: var(--c-ink);
+  color: var(--c-paper);
+  text-align: center;
+  padding: var(--s-3) var(--s-5);
+}
+
+.cta:hover {
+  background: var(--c-saffron);
+  color: var(--c-ink);
+}
+
+/* ------------------------------------------------------------ desktop */
+
+@media (min-width: 48rem) {
+  .toggle {
+    display: none;
+  }
+
+  .links {
+    display: flex;
+    flex-basis: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--s-6);
+    padding-top: 0;
+  }
+
+  .link,
+  .cta {
+    padding: var(--s-2) 0;
+  }
+
+  .cta {
+    margin-top: 0;
+    padding: var(--s-2) var(--s-5);
+  }
+}

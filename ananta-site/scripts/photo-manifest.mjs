@@ -1,0 +1,49 @@
+/**
+ * Which source photo becomes which treated asset.
+ *
+ * Processing concerns only - the captions and alt text live in
+ * content/photos.ts, keyed by the same slug.
+ *
+ * photos/01_campus_valley.jpg and 02_night_trail_of_lights.jpg are deliberately
+ * absent: they are Wikimedia CC BY-SA and would require visible attribution.
+ * Neither is on the caption list. See assets/CREDITS.md.
+ */
+export const PHOTOS = [
+  // slug                  source file                            tone      aspect
+  {
+    slug: 'devgrowth-launch',
+    src: '03_devgrowth_launch_hands_up.jpg',
+    tone: 'ink',
+    aspect: 4 / 3,
+  },
+  {
+    slug: 'pyverse-hands',
+    src: '04_pyverse_hands_on_laptop.jpg',
+    tone: 'saffron',
+    aspect: 3 / 4,
+  },
+  {
+    slug: 'ai-stack',
+    src: '05_codeclub_ai_stack_whiteboard.jpg',
+    tone: 'ink',
+    aspect: 4 / 3,
+  },
+  { slug: 'sangam-launch', src: '08_sangam_on_screen.jpg', tone: 'navy', aspect: 3 / 4 },
+  { slug: 'battle-code', src: '10_codeclub_team.jpg', tone: 'saffron', aspect: 4 / 3 },
+  { slug: 'pyverse-group', src: '11_pyverse_group.jpg', tone: 'ink', aspect: 4 / 3 },
+  { slug: 'sih-demo', src: '12_hackathon_demo.jpg', tone: 'navy', aspect: 3 / 2 },
+  { slug: 'sih-team', src: '13_hackathon_team.jpg', tone: 'ink', aspect: 4 / 3 },
+  {
+    slug: 'ekatva',
+    src: '14_winners_with_certificates.jpg',
+    tone: 'saffron',
+    aspect: 4 / 3,
+  },
+];
+
+/**
+ * One treated master per photo. The xerox and the tear are baked in here;
+ * responsive resizing and format negotiation are next/image's job, so there is
+ * no point emitting a size ladder by hand.
+ */
+export const MASTER_WIDTH = 1200;

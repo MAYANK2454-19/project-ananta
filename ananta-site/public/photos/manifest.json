@@ -1,0 +1,47 @@
+{
+  "devgrowth-launch": {
+    "width": 1200,
+    "height": 900,
+    "tone": "ink"
+  },
+  "pyverse-hands": {
+    "width": 1200,
+    "height": 1600,
+    "tone": "saffron"
+  },
+  "ai-stack": {
+    "width": 1200,
+    "height": 900,
+    "tone": "ink"
+  },
+  "sangam-launch": {
+    "width": 1200,
+    "height": 1600,
+    "tone": "navy"
+  },
+  "battle-code": {
+    "width": 1200,
+    "height": 900,
+    "tone": "saffron"
+  },
+  "pyverse-group": {
+    "width": 1200,
+    "height": 900,
+    "tone": "ink"
+  },
+  "sih-demo": {
+    "width": 1200,
+    "height": 800,
+    "tone": "navy"
+  },
+  "sih-team": {
+    "width": 1200,
+    "height": 900,
+    "tone": "ink"
+  },
+  "ekatva": {
+    "width": 1200,
+    "height": 900,
+    "tone": "saffron"
+  }
+}

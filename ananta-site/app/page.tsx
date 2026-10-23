@@ -1,138 +1,201 @@
 import Link from 'next/link';
-import LoopScene from '@/components/LoopScene';
-const stages = [
-  ['01', 'IDEATION', '06—12 NOV', '20 PTS'],
-  ['02', 'UI / UX', '13—18 NOV', '20 PTS'],
-  ['03', 'SHIP IT', '19—25 NOV', '30 PTS'],
-  ['04', 'THE FINAL', '04 DEC', '30 PTS'],
-];
+import type { Metadata } from 'next';
+import { Hero } from '@/components/Hero';
+import { Cutout } from '@/components/Cutout';
+import { Strip, CircuitRule, Eyebrow } from '@/components/Marks';
+import styles from './page.module.css';
+import { EVENT, ROUNDS, PRIZES, REGISTRATION } from '@/content/event';
+
+export const metadata: Metadata = {
+  title: `${EVENT.name} — ${EVENT.tagline}`,
+  description: `${EVENT.blurb} ${EVENT.displayRange}, ${EVENT.school}. Registration ${REGISTRATION.displayRange}.`,
+  alternates: { canonical: '/' },
+};
+
 export default function Home() {
   return (
-    <main>
-      <section className="hero">
-        <div className="hero-kicker">
-          <span>SANGAM PRESENTS</span>
-          <span>A PROJECT HACKATHON · SMVDU</span>
-        </div>
-        <div className="hero-title">
-          <h1>ANANTA</h1>
-          <span className="hero-index">
-            NO SHORTCUTS.
-            <br />
-            JUST THE BUILD.
-          </span>
-        </div>
-        <div className="hero-stage">
-          <div className="hero-copy">
-            <p className="eyebrow">23 OCTOBER — 04 DECEMBER 2026</p>
-            <h2>
-              Don’t pitch it.
+    <>
+      <Hero />
+
+      {/* ---------------------------------------------------- the point */}
+      <section className={`section ${styles.point}`} aria-labelledby="point-title">
+        <div className="shell">
+          <Eyebrow>Why six weeks</Eyebrow>
+
+          <div className={styles.pointGrid}>
+            <h2 id="point-title" className={styles.pointTitle}>
+              Twenty-four hours
               <br />
-              <em>Ship it.</em>
+              makes a demo.
+              <br />
+              <em>Six weeks makes a product.</em>
             </h2>
-            <p>
-              A six-week run from a real problem to a product that works, lives online,
-              and has your name in the commit history.
-            </p>
-            <Link className="button button-dark" href="/register">
-              MAKE YOUR ENTRY <span>↗</span>
-            </Link>
+
+            <div className={`prose ${styles.pointBody}`}>
+              <p>
+                {EVENT.name} is built around the part that usually gets skipped:
+                finishing. Pick a real problem, plan the system, design the experience,
+                build it, deploy it, and stand behind what you made.
+              </p>
+              <p>
+                The finish line is not a slide deck. It is a live product, a documented
+                repository and a team that can explain every decision in it.
+              </p>
+              <p>
+                <Link href="/about" className="link">
+                  Why {EVENT.name} exists
+                </Link>
+              </p>
+            </div>
           </div>
-          <LoopScene />
-          <div className="orbit-note">
-            A WORKING PRODUCT
-            <br />
-            OR IT ISN’T DONE.
-          </div>
-        </div>
-        <div className="hero-bottom">
-          <span>01 / THE BUILD</span>
-          <span>SCROLL TO EXPLORE ↓</span>
-          <span>KATRA, J&K · INDIA</span>
+
+          <dl className={styles.facts}>
+            <div className={styles.fact}>
+              <dt className="meta">Weeks</dt>
+              <dd>06</dd>
+            </div>
+            <div className={styles.fact}>
+              <dt className="meta">Marked rounds</dt>
+              <dd>04</dd>
+            </div>
+            <div className={styles.fact}>
+              <dt className="meta">Live product per team</dt>
+              <dd>01</dd>
+            </div>
+            <div className={styles.fact}>
+              <dt className="meta">Prize pool</dt>
+              <dd>{PRIZES.poolLabel}</dd>
+            </div>
+          </dl>
+
+          <p className={styles.factNote}>
+            {PRIZES.places.map((p) => `${p.place} ${p.amount}`).join(' · ')} ·{' '}
+            {PRIZES.certificates} certificates
+          </p>
         </div>
       </section>
-      <section className="manifesto section-pad">
-        <div className="section-label">
-          [ THE POINT ] <span>01—04</span>
+
+      <div className="shell">
+        <CircuitRule />
+      </div>
+
+      {/* --------------------------------------------------- the route */}
+      <section className={`section ${styles.route}`} aria-labelledby="route-title">
+        <div className="shell">
+          <div className={styles.routeHead}>
+            <h2 id="route-title">
+              Every round moves
+              <br />
+              the build <em>forward.</em>
+            </h2>
+            <Link href="/journey" className="link">
+              The full build log
+            </Link>
+          </div>
+
+          <ol className={styles.rounds}>
+            {ROUNDS.map((round) => (
+              <li
+                key={round.id}
+                className={`${styles.round} ${round.marks === null ? styles.window : ''}`}
+              >
+                <span className={styles.roundNo} aria-hidden="true">
+                  {round.n}
+                </span>
+                <div className={styles.roundBody}>
+                  <h3 className={styles.roundName}>{round.name}</h3>
+                  <p className={styles.roundSummary}>{round.summary}</p>
+                </div>
+                <p className={styles.roundMeta}>
+                  <span className="meta">{round.dateLabel}</span>
+                  {round.onCampus && <span className={styles.campus}>On campus</span>}
+                </p>
+                <p className={styles.roundMarks}>
+                  {round.marks === null ? (
+                    <span className="meta">No submission</span>
+                  ) : (
+                    <>
+                      <span className={styles.marksNum}>{round.marks}</span>
+                      <span className="meta"> marks</span>
+                    </>
+                  )}
+                </p>
+              </li>
+            ))}
+          </ol>
         </div>
-        <div className="manifesto-grid">
-          <h2>
-            Twenty-four hours makes a demo.
-            <br />
-            <em>Six weeks makes a product.</em>
+      </section>
+
+      {/* ------------------------------------------------ what came before */}
+      <section className={`section ${styles.before}`} aria-labelledby="before-title">
+        <div className="shell">
+          <Eyebrow>What came before</Eyebrow>
+          <h2 id="before-title" className={styles.beforeTitle}>
+            The rooms were <em>already full.</em>
           </h2>
-          <div>
-            <p>
-              ANANTA is a project-based hackathon built around the part that usually gets
-              skipped: finishing. Pick a problem, plan the system, design the experience,
-              build it, deploy it, and stand behind what you made.
-            </p>
-            <Link className="text-link" href="/about">
-              WHY ANANTA EXISTS <span>↗</span>
-            </Link>
-          </div>
-        </div>
-        <div className="metrics">
-          <div>
-            <b>06</b>
-            <span>WEEKS TO BUILD</span>
-          </div>
-          <div>
-            <b>04</b>
-            <span>ROUNDS TO CLEAR</span>
-          </div>
-          <div>
-            <b>01</b>
-            <span>LIVE PRODUCT PER TEAM</span>
-          </div>
-          <div>
-            <b>₹10K</b>
-            <span>PRIZE POOL</span>
+
+          <div className={styles.gallery}>
+            <Cutout
+              slug="ai-stack"
+              sizes="(min-width: 64rem) 30vw, (min-width: 48rem) 44vw, 84vw"
+              rotate={-1.8}
+              tape={['tl']}
+              showTag
+              className={styles.gal1}
+            />
+            <Cutout
+              slug="pyverse-group"
+              sizes="(min-width: 64rem) 34vw, (min-width: 48rem) 48vw, 84vw"
+              rotate={1.4}
+              tape={['tr', 'bl']}
+              showTag
+              className={styles.gal2}
+            />
+            <Cutout
+              slug="sih-team"
+              sizes="(min-width: 64rem) 26vw, (min-width: 48rem) 40vw, 72vw"
+              rotate={-2.6}
+              tape={['br']}
+              showTag
+              className={styles.gal3}
+            />
+            <Cutout
+              slug="ekatva"
+              sizes="(min-width: 64rem) 28vw, (min-width: 48rem) 44vw, 78vw"
+              rotate={2.2}
+              tape={['tl', 'br']}
+              showTag
+              className={styles.gal4}
+            />
           </div>
         </div>
       </section>
-      <section className="journey-preview section-pad">
-        <div className="section-label">
-          [ THE ROUTE ] <span>02—04</span>
-        </div>
-        <div className="split-heading">
-          <h2>
-            Every round
+
+      {/* ------------------------------------------------------ the ask */}
+      <section className={`section ${styles.ask} on-dark`} aria-labelledby="ask-title">
+        <div className="shell">
+          <p className="meta">The build starts here</p>
+          <h2 id="ask-title" className={styles.askTitle}>
+            Make something
             <br />
-            moves the build <em>forward.</em>
+            <em>worth shipping.</em>
           </h2>
-          <Link className="text-link" href="/journey">
-            FULL TIMELINE ↗
-          </Link>
-        </div>
-        <div className="stage-list">
-          {stages.map(([n, name, date, pts]) => (
-            <Link href="/journey" className="stage-row" key={n}>
-              <span>{n}</span>
-              <h3>{name}</h3>
-              <span>{date}</span>
-              <b>{pts}</b>
-              <i>↗</i>
+
+          <p className={styles.askLine}>
+            Registration closes {REGISTRATION.closes === '2026-11-04' ? '4 November' : ''}
+            . Teams announced by {REGISTRATION.teamsAnnouncedBy}.
+          </p>
+
+          <div className={styles.askActions}>
+            <Link href="/register" className={styles.askCta}>
+              Registration details
             </Link>
-          ))}
+            <Strip tone="saffron" rotate={-1.5} className={styles.askStrip}>
+              {REGISTRATION.displayRange}
+            </Strip>
+          </div>
         </div>
       </section>
-      <section className="red-cta">
-        <span className="eyebrow">THE BUILD STARTS HERE</span>
-        <h2>
-          Make something
-          <br />
-          <em>worth shipping.</em>
-        </h2>
-        <Link href="/register" className="button button-light">
-          REGISTRATION DETAILS ↗
-        </Link>
-        <div className="cta-stamp">
-          ANANTA
-          <br />
-          2026
-        </div>
-      </section>
-    </main>
+    </>
   );
 }

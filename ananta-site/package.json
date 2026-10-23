@@ -12,26 +12,29 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "prebuild": "node scripts/check-env-safety.mjs",
-    "prepare": "simple-git-hooks || true"
+    "prepare": "simple-git-hooks || true",
+    "photos": "node scripts/process-photos.mjs",
+    "team:photos": "node scripts/process-team-photos.mjs",
+    "contrast": "node scripts/contrast.mjs",
+    "textures": "node scripts/process-textures.mjs",
+    "assets": "npm run textures && npm run photos"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.57.0",
-    "lucide-react": "^0.468.0",
     "next": "^15.5.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "three": "^0.180.0"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
-    "@types/three": "^0.180.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "^15.5.28",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.9.10",
+    "sharp": "^0.34.5",
     "simple-git-hooks": "^2.14.0",
     "typescript": "^5.8.0"
   },
