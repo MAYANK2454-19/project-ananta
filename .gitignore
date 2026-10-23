@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+build/
+
+# Environment — never commit real values; .env.example is the template
+.env
+.env.*
+!.env.example
+
+# TypeScript incremental build state
+*.tsbuildinfo
+
+# Local data
+.data/
+data/*.sqlite
+data/*.sqlite-shm
+data/*.sqlite-wal
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+
+# Editors and OS
+.DS_Store
+.idea/
+*.swp
+
+# Hosting
+.vercel/
