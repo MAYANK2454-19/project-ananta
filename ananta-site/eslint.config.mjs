@@ -12,13 +12,7 @@ const compat = new FlatCompat({ baseDirectory: dirname(fileURLToPath(import.meta
  */
 const config = [
   {
-    ignores: [
-      '.next/**',
-      'out/**',
-      'node_modules/**',
-      'next-env.d.ts',
-      'public/**',
-    ],
+    ignores: ['.next/**', 'out/**', 'node_modules/**', 'next-env.d.ts', 'public/**'],
   },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
