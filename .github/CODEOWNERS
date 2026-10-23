@@ -1,0 +1,14 @@
+# Review ownership. Every PR to main needs an approval from the owner of the
+# files it touches.
+#
+# Default: Aryaveer owns the site, its design system and repo tooling.
+*                                   @aryavsparihar
+
+# Mayank owns Supabase, auth, the admin routes and anything backend.
+# Frontend changes to the admin pages are markup and CSS only; behaviour,
+# auth flow and env handling are his.
+/ananta-site/lib/supabase.ts        @MAYANK2454-19
+/ananta-site/middleware.ts          @MAYANK2454-19
+/ananta-site/app/admin/**           @MAYANK2454-19
+/supabase/**                        @MAYANK2454-19
+/ananta-site/.env.example           @MAYANK2454-19

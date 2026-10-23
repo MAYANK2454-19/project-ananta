@@ -10,7 +10,9 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prebuild": "node scripts/check-env-safety.mjs",
+    "prepare": "simple-git-hooks || true"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
@@ -30,9 +32,13 @@
     "eslint-config-next": "^15.5.28",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.9.10",
+    "simple-git-hooks": "^2.14.0",
     "typescript": "^5.8.0"
   },
   "engines": {
     "node": ">=20.11"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "sh ananta-site/scripts/pre-commit.sh"
   }
 }
