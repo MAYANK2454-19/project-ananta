@@ -1,5 +1,10 @@
-node_modules/
+﻿node_modules/
+.next/
+out/
+build/
 .env
+.env.*
+!.env.example
 .data/
 data/*.sqlite
 data/*.sqlite-shm
