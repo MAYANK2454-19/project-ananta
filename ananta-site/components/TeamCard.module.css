@@ -1,0 +1,221 @@
+/*
+ * A cutout pinned to a board, not a cell in a grid of avatars: each one is
+ * rotated a little, taped at the top, and sits on paper rather than in a card
+ * with a radius and a shadow.
+ */
+.card {
+  --rotate: 0deg;
+  --club: var(--c-sangam);
+  --club-on: var(--c-sangam-on);
+
+  position: relative;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  transform: rotate(var(--rotate));
+}
+
+.sangam {
+  --club: var(--c-sangam);
+  --club-on: var(--c-sangam-on);
+}
+.devgrowth {
+  --club: var(--c-devgrowth);
+  --club-on: var(--c-devgrowth-on);
+}
+.codeclub {
+  --club: var(--c-codeclub);
+  --club-on: var(--c-codeclub-on);
+}
+.smvdu {
+  --club: var(--c-smvdu);
+  --club-on: var(--c-smvdu-on);
+}
+
+/* ------------------------------------------------------------------ tape */
+
+.tape {
+  position: absolute;
+  z-index: 2;
+  width: 54px;
+  height: 18px;
+  background: var(--c-tape);
+  mix-blend-mode: multiply;
+  clip-path: polygon(
+    0 14%,
+    10% 0,
+    26% 10%,
+    44% 2%,
+    62% 11%,
+    80% 1%,
+    100% 8%,
+    100% 88%,
+    84% 100%,
+    64% 90%,
+    46% 100%,
+    28% 90%,
+    12% 99%,
+    0 100%
+  );
+  pointer-events: none;
+}
+
+.tapeTop {
+  top: -8px;
+  left: 50%;
+  translate: -50% 0;
+  rotate: -3deg;
+}
+
+/* ----------------------------------------------------------------- photo */
+
+.frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--c-paper-deep);
+  filter: drop-shadow(0 2px 3px rgb(22 24 29 / 0.14));
+}
+
+.photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /*
+   * Printed-sheet by default. Colour comes back on hover and focus, and only
+   * where there is a real pointer — on a phone there is no hover state to
+   * discover, so the desaturated version is simply the design.
+   */
+  filter: grayscale(1) contrast(1.06);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .photo {
+    transition: filter 240ms ease;
+  }
+
+  .card:hover .photo,
+  .card:focus-within .photo {
+    filter: grayscale(0) contrast(1);
+  }
+}
+
+/* Initials card: the club's colour, with the paper grain over it. */
+.initials {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background: var(--club);
+  color: var(--club-on);
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-variation-settings: 'wdth' 75;
+  letter-spacing: -0.02em;
+  font-size: clamp(2.5rem, 11vw, 4rem);
+  line-height: 1;
+}
+
+.initials::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/textures/paper.jpg');
+  background-size: 260px auto;
+  mix-blend-mode: multiply;
+  opacity: 0.45;
+}
+
+.pending .initials {
+  background: var(--c-paper-deep);
+  color: var(--c-muted);
+  border: 1px dashed var(--c-rule-strong);
+  /* "TBC" is a word, not two letters. */
+  font-size: clamp(1.25rem, 5vw, 1.75rem);
+  letter-spacing: 0.08em;
+}
+
+/* --------------------------------------------------------------- caption */
+
+/* The name on a strip of mono tape, the way a contact sheet is labelled. */
+.caption {
+  display: grid;
+  gap: 2px;
+  margin-top: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  background: var(--c-paper);
+  border-left: 3px solid var(--club);
+}
+
+.name {
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.pending .name {
+  color: var(--c-muted);
+}
+
+.role {
+  font-family: var(--f-serif);
+  font-size: var(--t-sm);
+  font-style: italic;
+  color: var(--c-muted);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: var(--s-1);
+}
+
+.tag {
+  background: var(--club);
+  color: var(--club-on);
+  padding: 2px var(--s-2);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.year {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+.links {
+  display: flex;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}
+
+.links a {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-green);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+/* -------------------------------------------------------------- featured */
+
+.featured .initials {
+  font-size: clamp(3rem, 13vw, 5rem);
+}
+
+.featured .name {
+  font-size: var(--t-base);
+}

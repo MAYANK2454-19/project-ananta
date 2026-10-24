@@ -1,0 +1,10 @@
+# Revisions that only reformat. Ignored by git blame so authorship points at
+# the commit that last changed the code, not the one that moved the newlines.
+#
+# Local use (once per clone):
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# GitHub reads this file automatically in its blame view.
+
+# chore: format - initial Prettier pass over the minified source
+448715e8521bbab64201b4be7a02394f78556611

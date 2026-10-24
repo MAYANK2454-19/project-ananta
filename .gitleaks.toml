@@ -1,0 +1,17 @@
+# gitleaks config. Extends the default rule set rather than replacing it.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Template placeholders, never real values"
+paths = [
+  '''\.env\.example$''',
+  '''\.gitleaks\.toml$''',
+]
+regexes = [
+  '''YOUR_SUPABASE_ANON_KEY''',
+  '''YOUR_PROJECT\.supabase\.co''',
+  '''REPLACE_WITH_REAL_FORM''',
+  '''admin@example\.com''',
+  '''ci-placeholder-anon-key''',
+]

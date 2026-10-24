@@ -1,0 +1,112 @@
+.cutout {
+  --rotate: 0deg;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.plate {
+  position: relative;
+  transform: rotate(var(--rotate));
+  /* The tear is in the file's alpha channel, so the drop shadow follows the
+     torn outline rather than a rectangle. */
+  filter: drop-shadow(0 2px 3px rgb(22 24 29 / 0.16));
+}
+
+.image {
+  width: 100%;
+  height: auto;
+}
+
+/* ------------------------------------------------------------------ tape */
+
+.tape {
+  position: absolute;
+  width: clamp(44px, 9vw, 78px);
+  height: clamp(16px, 2.6vw, 24px);
+  background: var(--c-tape);
+  /* Torn-off ends, not a clean rectangle. */
+  clip-path: polygon(
+    0 12%,
+    8% 0,
+    22% 9%,
+    38% 2%,
+    56% 10%,
+    74% 1%,
+    90% 8%,
+    100% 2%,
+    100% 90%,
+    88% 100%,
+    70% 92%,
+    52% 100%,
+    34% 91%,
+    18% 99%,
+    6% 92%,
+    0 100%
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+.tl {
+  top: -9px;
+  left: -14px;
+  rotate: -36deg;
+}
+.tr {
+  top: -9px;
+  right: -14px;
+  rotate: 34deg;
+}
+.bl {
+  bottom: -9px;
+  left: -14px;
+  rotate: 32deg;
+}
+.br {
+  bottom: -9px;
+  right: -14px;
+  rotate: -34deg;
+}
+
+/* --------------------------------------------------------------- caption */
+
+.caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  color: var(--c-muted);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* Club tag. Each pair is fixed in globals.css and checked by npm run contrast. */
+.tag {
+  padding: 3px var(--s-2);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.sangam {
+  background: var(--c-sangam);
+  color: var(--c-sangam-on);
+}
+.devgrowth {
+  background: var(--c-devgrowth);
+  color: var(--c-devgrowth-on);
+}
+.codeclub {
+  background: var(--c-codeclub);
+  color: var(--c-codeclub-on);
+}
+.smvdu {
+  background: var(--c-smvdu);
+  color: var(--c-smvdu-on);
+}

@@ -1,3 +1,144 @@
 import Link from 'next/link';
-const rounds=[{n:'01',name:'Ideation & planning',date:'06—12 NOVEMBER',points:'20 points',mode:'ONLINE',desc:'Define the problem and show that the solution can be built.',deliver:['Problem statement and originality','Architecture, schema, workflow and stack rationale','Feasible plan and clear role division'],due:'PPT submission · 12 November'},{n:'02',name:'UI / UX design',date:'13—18 NOVEMBER',points:'20 points',mode:'ONLINE REVIEW',desc:'Turn the plan into a coherent experience that can be tested before the code is finished.',deliver:['Visual design and usability','Complete user flow','Clickable Figma or Adobe XD prototype'],due:'Prototype review · 18 November'},{n:'03',name:'Pre-deployment review',date:'25 NOVEMBER',points:'30 points',mode:'ON CAMPUS',desc:'Bring the working build. The full team must be present for the hands-on review.',deliver:['Functionality and completeness','Code quality and integration','Deployment and documentation'],due:'Hands-on review and elimination round'},{n:'04',name:'The final',date:'04 DECEMBER',points:'30 points',mode:'ON CAMPUS',desc:'Put the live product in front of the jury and demonstrate what it does.',deliver:['Live product demonstration','Impact and usefulness','Presentation and questions'],due:'Final evaluation · 4 December'}];
-export default function Journey(){return <main className="inner-page"><div className="page-top"><span>ANANTA / THE JOURNEY</span><span>02—04</span></div><h1 className="page-title">From first<br/>sketch to <em>live URL.</em></h1><p className="page-intro">Four rounds. Each one asks for more than the last. Dates and submission times may be updated by the organisers.</p><div className="rounds">{rounds.map(r=><article className="round" key={r.n}><div className="round-no">{r.n}</div><div className="round-main"><div className="round-meta"><span>{r.date}</span><span>{r.mode}</span></div><h2>{r.name}</h2><p>{r.desc}</p><ul>{r.deliver.map(d=><li key={d}>{d}</li>)}</ul><div className="round-due">{r.due}</div></div><div className="round-points">{r.points}</div></article>)}</div><div className="notice">Registration is scheduled to close on 4 November. Team announcements are planned by 5 November. Follow organiser updates for confirmed submission times.</div><Link href="/register" className="button button-dark">REGISTRATION DETAILS ↗</Link></main>}
+import type { Metadata } from 'next';
+import { PageHead } from '@/components/PageHead';
+import { CircuitRule } from '@/components/Marks';
+import styles from './page.module.css';
+import { EVENT, ROUNDS, REGISTRATION } from '@/content/event';
+
+export const metadata: Metadata = {
+  title: 'The journey',
+  description: `The four marked rounds of ${EVENT.name}, from ideation on 6 November to the live demo on 4 December, with the build window in between.`,
+  alternates: { canonical: '/journey' },
+};
+
+const TOTAL_MARKS = ROUNDS.reduce((sum, r) => sum + (r.marks ?? 0), 0);
+
+export default function Journey() {
+  return (
+    <>
+      <PageHead
+        label="The journey"
+        title={
+          <>
+            From first sketch
+            <br />
+            to <em>live URL.</em>
+          </>
+        }
+        lead="Four marked rounds and one build window, read the way you would read the history of the thing you are making."
+      />
+
+      {/*
+        The build log. It is the event's own git-audit rule turned into the
+        page's structure — but every entry still says the date, the round
+        number and the marks in plain words, so it reads as a timeline whether
+        or not you have ever run `git log`.
+      */}
+      <section className={`section ${styles.log}`} aria-labelledby="log-title">
+        <div className="shell">
+          <div className={styles.logHead}>
+            <h2 id="log-title" className={styles.logTitle}>
+              The build log
+            </h2>
+            <p className={styles.logKey}>
+              <code className={styles.sample}>a1d3f09</code> is a commit hash — the short
+              id git gives every saved change. Each round below is one entry in the
+              project&rsquo;s history.
+            </p>
+          </div>
+
+          <ol className={styles.entries}>
+            {ROUNDS.map((round) => {
+              const isWindow = round.marks === null;
+              return (
+                <li
+                  key={round.id}
+                  className={`${styles.entry} ${isWindow ? styles.windowEntry : ''}`}
+                >
+                  <span className={styles.node} aria-hidden="true" />
+
+                  <div className={styles.line}>
+                    <code className={styles.hash}>{round.hash}</code>
+                    <span className={styles.date}>{round.dateLabel}</span>
+                    {!isWindow && <span className={styles.round}>Round {round.n}</span>}
+                    {round.onCampus && <span className={styles.campus}>On campus</span>}
+                    {isWindow ? (
+                      <span className={styles.noMarks}>no submission</span>
+                    ) : (
+                      <span className={styles.tag}>tag: {round.marks} marks</span>
+                    )}
+                  </div>
+
+                  <h3 className={styles.name}>{round.name}</h3>
+                  <p className={styles.summary}>{round.summary}</p>
+
+                  {round.criteria.length > 0 && (
+                    <>
+                      <p className={`meta ${styles.criteriaLabel}`}>Marked on</p>
+                      <ul className={styles.criteria}>
+                        {round.criteria.map((c) => (
+                          <li key={c}>{c}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                  <p className={styles.deliverable}>
+                    <span className="meta">Deliverable</span> {round.deliverable}
+                  </p>
+                </li>
+              );
+            })}
+
+            <li className={`${styles.entry} ${styles.headEntry}`}>
+              <span className={`${styles.node} ${styles.headNode}`} aria-hidden="true" />
+              <div className={styles.line}>
+                <code className={styles.hash}>HEAD</code>
+                <span className={styles.date}>4 Dec</span>
+              </div>
+              <h3 className={styles.name}>Your product, live.</h3>
+              <p className={styles.summary}>
+                Still online after the event, still in your history, still yours.
+              </p>
+            </li>
+          </ol>
+
+          <p className={styles.total}>
+            {TOTAL_MARKS} marks across four rounds · Rounds 3 and 4 are on campus
+          </p>
+        </div>
+      </section>
+
+      <div className="shell">
+        <CircuitRule flip />
+      </div>
+
+      <section className={`section ${styles.before}`} aria-labelledby="before-title">
+        <div className="shell">
+          <h2 id="before-title" className={styles.beforeTitle}>
+            Before any of that
+          </h2>
+          <ol className={styles.pre}>
+            <li>
+              <span className="meta">{REGISTRATION.displayRange}</span>
+              <p>Registration is open.</p>
+            </li>
+            <li>
+              <span className="meta">By {REGISTRATION.teamsAnnouncedBy}</span>
+              <p>Teams are announced.</p>
+            </li>
+          </ol>
+          <p className={styles.beforeNote}>
+            Dates are set by the organisers and may be updated. Submission times for each
+            round are confirmed closer to the date.
+          </p>
+          <p>
+            <Link href="/register" className="link">
+              How to register
+            </Link>
+          </p>
+        </div>
+      </section>
+    </>
+  );
+}

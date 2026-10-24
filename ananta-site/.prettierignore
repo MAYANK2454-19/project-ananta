@@ -1,0 +1,12 @@
+.next/
+out/
+node_modules/
+package-lock.json
+public/
+
+# Owned by Mayank and under active change on feat/supabase-*.
+# Reformatting these would hand him a pointless conflict; they are already
+# multi-line and readable. See CODEOWNERS.
+lib/supabase.ts
+middleware.ts
+tsconfig.json

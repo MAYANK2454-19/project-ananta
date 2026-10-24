@@ -1,0 +1,342 @@
+/* ------------------------------------------------------------ the point */
+
+.pointGrid {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.pointTitle {
+  font-size: var(--t-h2);
+}
+
+.pointBody {
+  font-size: var(--t-base);
+}
+
+/*
+ * Facts as a definition list, not four identical cards. Hairlines between,
+ * no boxes, no shadows, and the numbers set at display scale.
+ */
+.facts {
+  margin: var(--s-8) 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-top: 1px solid var(--c-rule-strong);
+}
+
+.fact {
+  padding: var(--s-5) var(--s-4) var(--s-5) 0;
+  border-bottom: 1px solid var(--c-rule);
+}
+
+.fact:nth-child(even) {
+  padding-left: var(--s-4);
+  border-left: 1px solid var(--c-rule);
+}
+
+.fact dt {
+  color: var(--c-muted);
+}
+
+.fact dd {
+  margin: var(--s-2) 0 0;
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-variation-settings: 'wdth' 75;
+  letter-spacing: -0.03em;
+  font-size: clamp(2.25rem, 9vw, 3.5rem);
+  line-height: 0.9;
+}
+
+.factNote {
+  margin-top: var(--s-4);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+/* ------------------------------------------------------------ the route */
+
+.routeHead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-5);
+  margin-bottom: var(--s-7);
+}
+
+.rounds {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--c-rule-strong);
+}
+
+/*
+ * One row per round. Dates and marks are NOT hidden on small screens — the
+ * previous build dropped both below 760px, which deleted the schedule for
+ * every phone visitor.
+ */
+.round {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'no   body'
+    '.    meta'
+    '.    marks';
+  gap: var(--s-2) var(--s-4);
+  padding: var(--s-5) 0;
+  border-bottom: 1px solid var(--c-rule);
+}
+
+/* The build window is not a round: lighter, inset, no marks. */
+.window {
+  background: color-mix(in srgb, var(--c-paper-deep) 60%, transparent);
+  padding-inline: var(--s-4);
+}
+
+.window .roundName {
+  font-size: var(--t-h3);
+  color: var(--c-muted);
+}
+
+.roundNo {
+  grid-area: no;
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--c-saffron-text);
+  padding-top: 0.45em;
+  min-width: 2.25ch;
+}
+
+.roundBody {
+  grid-area: body;
+}
+
+.roundName {
+  font-size: var(--t-h3);
+  margin-bottom: var(--s-2);
+}
+
+.roundSummary {
+  color: var(--c-muted);
+  max-width: 46ch;
+}
+
+.roundMeta {
+  grid-area: meta;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+  color: var(--c-muted);
+}
+
+.campus {
+  background: var(--c-navy);
+  color: var(--c-paper);
+  padding: 3px var(--s-2);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.roundMarks {
+  grid-area: marks;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-1);
+  color: var(--c-muted);
+}
+
+.marksNum {
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-stretch: 80%;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--c-ink);
+}
+
+/* ------------------------------------------------------ what came before */
+
+.beforeTitle {
+  font-size: var(--t-h2);
+  margin-bottom: var(--s-8);
+  max-width: 18ch;
+}
+
+/*
+ * A pinned-up spread, not a card grid: different widths, different offsets,
+ * overlapping the hairline above.
+ */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--s-6) var(--s-3);
+}
+
+.gal1 {
+  grid-column: 1 / 10;
+}
+
+.gal2 {
+  grid-column: 3 / 13;
+  margin-top: var(--s-4);
+}
+
+.gal3 {
+  grid-column: 1 / 9;
+}
+
+.gal4 {
+  grid-column: 4 / 13;
+  margin-top: var(--s-2);
+}
+
+/* --------------------------------------------------------------- the ask */
+
+.ask {
+  background: var(--c-navy);
+  color: var(--c-paper);
+}
+
+.ask .meta {
+  color: color-mix(in srgb, var(--c-paper) 80%, var(--c-navy));
+}
+
+.askTitle {
+  font-size: var(--t-h1);
+  margin: var(--s-4) 0 var(--s-5);
+}
+
+.askLine {
+  font-family: var(--f-serif);
+  font-size: var(--t-lead);
+  max-width: 30ch;
+  color: color-mix(in srgb, var(--c-paper) 90%, var(--c-navy));
+}
+
+.askActions {
+  margin-top: var(--s-7);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-5);
+}
+
+.askCta {
+  display: inline-block;
+  background: var(--c-paper);
+  color: var(--c-ink);
+  padding: var(--s-4) var(--s-6);
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.askCta:hover {
+  background: var(--c-saffron);
+}
+
+.askStrip {
+  font-size: 1.25rem;
+}
+
+/* --------------------------------------------------------------- 768px+ */
+
+@media (min-width: 48rem) {
+  .facts {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .fact {
+    padding-left: var(--s-4);
+    border-left: 1px solid var(--c-rule);
+  }
+
+  .fact:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .round {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: 'no body meta marks';
+    align-items: baseline;
+    gap: var(--s-6);
+    padding: var(--s-6) 0;
+  }
+
+  .roundMeta {
+    justify-content: flex-end;
+    min-width: 13ch;
+  }
+
+  .roundMarks {
+    justify-content: flex-end;
+    min-width: 8ch;
+  }
+
+  .routeHead {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .gal1 {
+    grid-column: 1 / 6;
+  }
+  .gal2 {
+    grid-column: 6 / 13;
+    margin-top: var(--s-8);
+  }
+  .gal3 {
+    grid-column: 2 / 7;
+    margin-top: calc(var(--s-5) * -1);
+  }
+  .gal4 {
+    grid-column: 7 / 12;
+  }
+}
+
+/* -------------------------------------------------------------- 1024px+ */
+
+@media (min-width: 64rem) {
+  .pointGrid {
+    grid-template-columns: 1.15fr 1fr;
+    gap: var(--s-9);
+    align-items: start;
+  }
+
+  .pointTitle {
+    font-size: clamp(2.5rem, 3.6vw, 3.75rem);
+  }
+
+  .gal1 {
+    grid-column: 1 / 5;
+  }
+  .gal2 {
+    grid-column: 5 / 10;
+    margin-top: var(--s-9);
+  }
+  .gal3 {
+    grid-column: 1 / 4;
+    margin-top: calc(var(--s-6) * -1);
+  }
+  .gal4 {
+    grid-column: 9 / 13;
+    margin-top: calc(var(--s-10) * -1);
+  }
+}

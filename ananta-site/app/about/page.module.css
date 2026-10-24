@@ -1,0 +1,139 @@
+/* ---------------------------------------------------------- the name */
+
+.meaningGrid {
+  display: grid;
+  gap: var(--s-7);
+}
+
+.devaTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-4);
+  font-size: clamp(3rem, 14vw, 5rem);
+  margin-bottom: var(--s-5);
+}
+
+/* Saffron on cream is 2.51:1, so अनन्त is deepened here — it is the only
+   place the mark appears at text scale rather than inside the stamp. */
+.devaTitle :global(.deva) {
+  color: var(--c-saffron-deep);
+  line-height: 0.9;
+}
+
+.meaningWord {
+  font-family: var(--f-serif);
+  font-size: 0.42em;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--c-muted);
+}
+
+.meaningBody {
+  max-width: 48ch;
+}
+
+.meaningPhoto {
+  max-width: 22rem;
+}
+
+/* -------------------------------------------------------- what happens */
+
+.whatTitle {
+  font-size: var(--t-h2);
+  margin-bottom: var(--s-7);
+  max-width: 14ch;
+}
+
+.whatGrid {
+  display: grid;
+  gap: var(--s-7);
+}
+
+.aside {
+  border-top: 2px solid var(--c-ink);
+  padding-top: var(--s-4);
+  align-self: start;
+}
+
+.aside .meta {
+  color: var(--c-muted);
+}
+
+.leaveWith {
+  margin: var(--s-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.leaveWith li {
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--c-rule);
+}
+
+.leaveWith li:last-child {
+  border-bottom: 0;
+}
+
+/* --------------------------------------------------- the rule that matters */
+
+.rule {
+  background: var(--c-paper-deep);
+}
+
+.ruleInner {
+  display: grid;
+  gap: var(--s-7);
+}
+
+.strips {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+  margin: 0 0 var(--s-6);
+  font-size: clamp(1.375rem, 7vw, 2.5rem);
+}
+
+.stripTwo {
+  margin-left: 0.8em;
+}
+
+.stripThree {
+  margin-left: 0.3em;
+}
+
+.ruleNote {
+  max-width: 44ch;
+  margin-bottom: var(--s-5);
+  color: var(--c-muted);
+}
+
+.stampWrap {
+  justify-self: start;
+}
+
+/* ------------------------------------------------------------- 768px+ */
+
+@media (min-width: 48rem) {
+  .meaningGrid {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: start;
+    gap: var(--s-8);
+  }
+
+  .whatGrid {
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--s-9);
+  }
+
+  .ruleInner {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--s-8);
+  }
+
+  .stampWrap {
+    justify-self: end;
+  }
+}

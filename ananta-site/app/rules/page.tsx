@@ -1,3 +1,122 @@
 import Link from 'next/link';
-const rules=[['01','Team structure','Each team has a 3rd-year team leader, 1st- and 2nd-year core developers, a 4th-year senior student mentor and a faculty mentor.'],['02','Inclusive teams','Every team must include at least one female member.'],['03','Original work only','Development must be original and completed within the event window. Commit history and commit authenticity will be audited.'],['04','Deploy the product','Projects must be deployed to a public cloud or hosting service so the jury can evaluate a live product.'],['05','Be ready for reviews','Teams should be prepared to explain their design, architecture, implementation, deployment and decisions at each round.']];
-export default function Rules(){return <main className="inner-page"><div className="page-top"><span>ANANTA / RULES OF THE BUILD</span><span>03—04</span></div><h1 className="page-title">Make it yours.<br/><em>Make it work.</em></h1><p className="page-intro">A few ground rules, so the work—and the people doing it—get a fair shot.</p><div className="rules-list">{rules.map(([n,title,desc])=><article key={n}><span>{n}</span><div><h2>{title}</h2><p>{desc}</p></div><b>↗</b></article>)}</div><div className="notice">If a requirement or deadline is unclear, check with the organisers before submitting. Final submission times and post-review advancement details are to be confirmed.</div><Link href="/register" className="button button-dark">I’M READY TO BUILD ↗</Link></main>}
+import type { Metadata } from 'next';
+import { PageHead } from '@/components/PageHead';
+import { Cutout } from '@/components/Cutout';
+import { Strip } from '@/components/Marks';
+import styles from './page.module.css';
+import { EVENT, TEAM_RULES, PRIZES } from '@/content/event';
+
+export const metadata: Metadata = {
+  title: 'Rules',
+  description: `Who is on an ${EVENT.name} team, what counts as original work, and what has to be deployed by the final.`,
+  alternates: { canonical: '/rules' },
+};
+
+export default function Rules() {
+  return (
+    <>
+      <PageHead
+        label="Rules of the build"
+        title={
+          <>
+            Make it yours.
+            <br />
+            <em>Make it work.</em>
+          </>
+        }
+        lead="Five ground rules, so the work — and the people doing it — get a fair shot."
+      />
+
+      <section className={`section ${styles.rules}`} aria-labelledby="rules-title">
+        <div className="shell">
+          <h2 id="rules-title" className="visually-hidden">
+            The rules
+          </h2>
+
+          <ol className={styles.list}>
+            {TEAM_RULES.map((rule) => (
+              <li key={rule.n} className={styles.rule}>
+                <span className={styles.n} aria-hidden="true">
+                  {rule.n}
+                </span>
+                <div>
+                  <h3 className={styles.name}>{rule.title}</h3>
+                  <p className={styles.body}>{rule.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className={`section ${styles.audit}`} aria-labelledby="audit-title">
+        <div className="shell">
+          <div className={styles.auditGrid}>
+            <div>
+              <h2 id="audit-title" className={styles.auditTitle}>
+                About that git audit
+              </h2>
+              <div className={`prose ${styles.auditBody}`}>
+                <p>
+                  Nobody is trying to catch you out. The history is checked because it is
+                  the only honest record of how a product got built — who wrote what,
+                  when, and in what order.
+                </p>
+                <p>
+                  Commit as you go, from your own account, in small pieces. A repository
+                  with one commit the night before the final tells the jury more than you
+                  want it to.
+                </p>
+              </div>
+              <p>
+                <Link href="/journey" className="link">
+                  See the four rounds
+                </Link>
+              </p>
+            </div>
+
+            <Cutout
+              slug="sih-demo"
+              sizes="(min-width: 64rem) 30vw, (min-width: 48rem) 42vw, 76vw"
+              rotate={-2}
+              tape={['tr', 'bl']}
+              className={styles.auditPhoto}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className={`section ${styles.prizes}`} aria-labelledby="prizes-title">
+        <div className="shell">
+          <h2 id="prizes-title" className={styles.prizesTitle}>
+            What&rsquo;s on the table
+          </h2>
+
+          <dl className={styles.prizeList}>
+            {PRIZES.places.map((p) => (
+              <div key={p.place} className={styles.prize}>
+                <dt className="meta">{p.place}</dt>
+                <dd>{p.amount}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <p className={styles.certs}>
+            {PRIZES.poolLabel} total, plus {PRIZES.certificates} certificates.
+          </p>
+
+          <p className={styles.strips}>
+            <Strip tone="saffron" rotate={-1.6}>
+              Ship it.
+            </Strip>
+          </p>
+
+          <p className={styles.unclear}>
+            If a requirement or a deadline is unclear, ask the organisers before you
+            submit rather than after.
+          </p>
+        </div>
+      </section>
+    </>
+  );
+}
