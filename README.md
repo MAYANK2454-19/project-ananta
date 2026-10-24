@@ -149,8 +149,10 @@ Nothing is in a database; editing that file is the whole job.
    WebP at two sizes into `public/team/`.
 4. `npm run dev` and check the board at `/team`.
 
-Entries named `TODO Name` are placeholders so the layout can be judged. **A
-production build fails while any remain** — replace them before launch.
+Entries named `TODO Name` are placeholders so the layout can be judged; they
+show as `TBC` cards on the board. **A production build fails while any remain**
+(`VERCEL_ENV=production` or `ANANTA_ENV=production`); local and CI builds only
+warn, so the branch stays green while you collect the real names.
 
 No photo is fine: leave `photo` out and the person gets an initials card in their
 club's colour.

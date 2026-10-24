@@ -1,0 +1,145 @@
+.grid {
+  display: grid;
+  gap: var(--s-8);
+}
+
+/* ---------------------------------------------------------- the action */
+
+.windowTitle {
+  font-size: var(--t-h3);
+  margin-bottom: var(--s-4);
+}
+
+.dates {
+  margin: var(--s-5) 0 var(--s-6);
+  font-size: 1.375rem;
+}
+
+.cta {
+  display: inline-block;
+  background: var(--c-ink);
+  color: var(--c-paper);
+  padding: var(--s-4) var(--s-6);
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.cta:hover {
+  background: var(--c-saffron);
+  color: var(--c-ink);
+}
+
+.announce {
+  margin-top: var(--s-4);
+  color: var(--c-muted);
+}
+
+/* A setup warning for us, not a message for students — reads as a note. */
+.placeholder {
+  margin-top: var(--s-5);
+  padding: var(--s-4);
+  border-left: 3px solid var(--c-saffron);
+  background: var(--c-paper-deep);
+  font-size: var(--t-sm);
+  max-width: 44ch;
+}
+
+/* --------------------------------------------------------- before you */
+
+.before {
+  border-top: 2px solid var(--c-ink);
+  padding-top: var(--s-5);
+}
+
+.beforeTitle {
+  font-size: var(--t-h3);
+  margin-bottom: var(--s-4);
+}
+
+.checklist {
+  margin: 0 0 var(--s-6);
+  padding: 0;
+  list-style: none;
+}
+
+.checklist li {
+  padding: var(--s-3) 0 var(--s-3) var(--s-5);
+  border-bottom: 1px solid var(--c-rule);
+  position: relative;
+}
+
+.checklist li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.15em;
+  width: 10px;
+  height: 2px;
+  background: var(--c-saffron-deep);
+}
+
+.teamLabel {
+  color: var(--c-muted);
+  margin-bottom: var(--s-2);
+}
+
+.team {
+  max-width: 48ch;
+  color: var(--c-muted);
+}
+
+.team + .team {
+  margin-top: var(--s-3);
+}
+
+/* ------------------------------------------------------------- closing */
+
+.closing {
+  background: var(--c-paper-deep);
+}
+
+.closingGrid {
+  display: grid;
+  gap: var(--s-7);
+}
+
+.closingTitle {
+  font-size: var(--t-h2);
+  max-width: 16ch;
+  margin-bottom: var(--s-4);
+}
+
+.closingBody {
+  max-width: 44ch;
+  margin-bottom: var(--s-5);
+}
+
+.fineprint {
+  font-size: var(--t-sm);
+  color: var(--c-muted);
+  max-width: 48ch;
+}
+
+.closingPhoto {
+  max-width: 28rem;
+}
+
+/* -------------------------------------------------------------- 768px+ */
+
+@media (min-width: 48rem) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-9);
+    align-items: start;
+  }
+
+  .closingGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-8);
+    align-items: center;
+  }
+}

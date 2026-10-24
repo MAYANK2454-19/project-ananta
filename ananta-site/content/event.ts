@@ -30,6 +30,10 @@ export const REGISTRATION = {
   opens: '2026-10-23',
   closes: '2026-11-04',
   displayRange: '23 Oct — 4 Nov',
+  /** Rendered forms of `closes`, so pages never re-derive a date from a string. */
+  closesDisplay: '4 November',
+  closesDisplayShort: '4 Nov',
+  closesDisplayFull: '4 November 2026, 23:59 IST',
   teamsAnnouncedBy: '5 November',
 
   /**

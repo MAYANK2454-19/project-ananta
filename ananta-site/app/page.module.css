@@ -108,7 +108,7 @@
   font-family: var(--f-mono);
   font-size: var(--t-sm);
   font-weight: 500;
-  color: var(--c-saffron-deep);
+  color: var(--c-saffron-text);
   padding-top: 0.45em;
   min-width: 2.25ch;
 }

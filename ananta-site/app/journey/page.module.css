@@ -1,0 +1,234 @@
+.logHead {
+  margin-bottom: var(--s-7);
+}
+
+.logTitle {
+  font-size: var(--t-h2);
+  margin-bottom: var(--s-4);
+}
+
+.logKey {
+  max-width: 54ch;
+  color: var(--c-muted);
+}
+
+.sample,
+.hash {
+  font-family: var(--f-mono);
+  /* A commit hash is content, not decoration: never below the 12px floor. */
+  font-size: max(0.875em, 0.75rem);
+  background: var(--c-paper-deep);
+  padding: 1px var(--s-2);
+  color: var(--c-saffron-text);
+}
+
+/* --------------------------------------------------------------- entries */
+
+/*
+ * The graph rail. The vertical line is drawn on each entry rather than the
+ * list, so the last one can stop the line where the history ends.
+ */
+.entries {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  position: relative;
+  padding-left: var(--s-6);
+  padding-bottom: var(--s-7);
+}
+
+.entry::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 0.55rem;
+  bottom: 0;
+  width: 2px;
+  background: var(--c-rule-strong);
+}
+
+.entry:last-child::before {
+  display: none;
+}
+
+.node {
+  position: absolute;
+  left: 0;
+  top: 0.4rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--c-paper);
+  border: 2px solid var(--c-ink);
+  z-index: 1;
+}
+
+/* The build window is not a marked round: hollow node, dashed rail. */
+.windowEntry::before {
+  background: none;
+  border-left: 2px dashed var(--c-rule-strong);
+  width: 0;
+}
+
+.windowEntry .node {
+  border-color: var(--c-rule-strong);
+}
+
+.windowEntry .name {
+  color: var(--c-muted);
+}
+
+.headEntry .node {
+  background: var(--c-saffron);
+  border-color: var(--c-saffron-deep);
+}
+
+/* ------------------------------------------------------------ meta line */
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-3);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.05em;
+}
+
+.date,
+.round {
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+.round {
+  color: var(--c-ink);
+  font-weight: 500;
+}
+
+/* "tag: 20 marks" — git's own idiom, in the event's accent. */
+.tag {
+  background: var(--c-saffron);
+  color: var(--c-ink);
+  padding: 2px var(--s-2);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.campus {
+  background: var(--c-navy);
+  color: var(--c-paper);
+  padding: 2px var(--s-2);
+  font-weight: 500;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.noMarks {
+  color: var(--c-muted);
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------- body */
+
+.name {
+  font-size: var(--t-h3);
+  margin-bottom: var(--s-2);
+}
+
+.summary {
+  max-width: 50ch;
+  margin-bottom: var(--s-4);
+}
+
+.criteriaLabel {
+  color: var(--c-muted);
+  margin-bottom: var(--s-2);
+}
+
+.criteria {
+  margin: 0 0 var(--s-4);
+  padding: 0;
+  list-style: none;
+  max-width: 52ch;
+}
+
+.criteria li {
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--c-rule);
+}
+
+.criteria li::before {
+  content: '— ';
+  color: var(--c-muted);
+}
+
+.deliverable {
+  color: var(--c-muted);
+}
+
+.deliverable :global(.meta) {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.total {
+  margin-top: var(--s-5);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--c-rule-strong);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+/* -------------------------------------------------------- before that */
+
+.beforeTitle {
+  font-size: var(--t-h2);
+  margin-bottom: var(--s-6);
+}
+
+.pre {
+  margin: 0 0 var(--s-5);
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--c-rule-strong);
+  max-width: 44rem;
+}
+
+.pre li {
+  display: grid;
+  gap: var(--s-1);
+  padding: var(--s-4) 0;
+  border-bottom: 1px solid var(--c-rule);
+}
+
+.pre :global(.meta) {
+  color: var(--c-muted);
+}
+
+.beforeNote {
+  max-width: 50ch;
+  margin-bottom: var(--s-5);
+  color: var(--c-muted);
+}
+
+/* -------------------------------------------------------------- 768px+ */
+
+@media (min-width: 48rem) {
+  .entry {
+    padding-left: var(--s-7);
+  }
+
+  .pre li {
+    grid-template-columns: 14rem 1fr;
+    gap: var(--s-5);
+    align-items: baseline;
+  }
+}

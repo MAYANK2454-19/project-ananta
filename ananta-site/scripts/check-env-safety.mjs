@@ -22,6 +22,7 @@ const SERVER_ONLY_VARS = [
   'SUPABASE_SERVICE_ROLE_KEY',
   'SUPABASE_SERVICE_KEY',
   'ADMIN_EMAIL',
+  'ADMIN_EMAILS',
 ];
 
 const errors = [];

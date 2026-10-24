@@ -1,0 +1,132 @@
+/* ------------------------------------------------------------- the list */
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--c-rule-strong);
+}
+
+/*
+ * Rows, not cards. No box, no radius, no shadow — a hairline between each,
+ * and the number set in mono out in the margin.
+ */
+.rule {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s-4);
+  padding: var(--s-6) 0;
+  border-bottom: 1px solid var(--c-rule);
+}
+
+.n {
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--c-saffron-text);
+  padding-top: 0.3em;
+}
+
+.name {
+  font-size: var(--t-h3);
+  margin-bottom: var(--s-2);
+}
+
+.body {
+  max-width: 56ch;
+  color: var(--c-muted);
+}
+
+/* ------------------------------------------------------------ the audit */
+
+.audit {
+  background: var(--c-paper-deep);
+}
+
+.auditGrid {
+  display: grid;
+  gap: var(--s-7);
+}
+
+.auditTitle {
+  font-size: var(--t-h2);
+  margin-bottom: var(--s-5);
+  max-width: 14ch;
+}
+
+.auditBody {
+  margin-bottom: var(--s-5);
+}
+
+.auditPhoto {
+  max-width: 24rem;
+}
+
+/* ----------------------------------------------------------- the prizes */
+
+.prizesTitle {
+  font-size: var(--t-h2);
+  margin-bottom: var(--s-6);
+}
+
+.prizeList {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--c-rule-strong);
+}
+
+.prize {
+  padding: var(--s-5) var(--s-3) var(--s-5) 0;
+  border-bottom: 1px solid var(--c-rule);
+}
+
+.prize + .prize {
+  padding-left: var(--s-3);
+  border-left: 1px solid var(--c-rule);
+}
+
+.prize dt {
+  color: var(--c-muted);
+}
+
+.prize dd {
+  margin: var(--s-2) 0 0;
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-variation-settings: 'wdth' 75;
+  letter-spacing: -0.03em;
+  font-size: clamp(1.75rem, 7vw, 2.75rem);
+  line-height: 0.9;
+}
+
+.certs {
+  margin-top: var(--s-4);
+  color: var(--c-muted);
+}
+
+.strips {
+  margin: var(--s-7) 0 var(--s-6);
+  font-size: clamp(2rem, 10vw, 3.5rem);
+}
+
+.unclear {
+  max-width: 50ch;
+  color: var(--c-muted);
+}
+
+/* -------------------------------------------------------------- 768px+ */
+
+@media (min-width: 48rem) {
+  .rule {
+    grid-template-columns: 4rem 1fr;
+    gap: var(--s-6);
+  }
+
+  .auditGrid {
+    grid-template-columns: 1.3fr 1fr;
+    gap: var(--s-9);
+    align-items: start;
+  }
+}

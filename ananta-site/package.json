@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "prebuild": "node scripts/check-env-safety.mjs",
+    "prebuild": "node scripts/check-env-safety.mjs && node scripts/check-team.mjs",
     "prepare": "simple-git-hooks || true",
     "photos": "node scripts/process-photos.mjs",
     "team:photos": "node scripts/process-team-photos.mjs",

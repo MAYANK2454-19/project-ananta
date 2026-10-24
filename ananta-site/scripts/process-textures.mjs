@@ -24,14 +24,21 @@ async function main() {
   await mkdir(OUT, { recursive: true });
 
   // A calm patch from the middle of the scan: no torn corner, no shadow.
-  const patch = await sharp(SRC)
+  // Two passes on purpose: sharp applies normalise() AFTER linear() within a
+  // single pipeline, so doing both at once would stretch the flattened range
+  // straight back out and hand us a mid-grey tile.
+  const stretched = await sharp(SRC)
     .extract({ left: 700, top: 1100, width: 1000, height: 1000 })
     .resize(HALF, HALF, { fit: 'fill' })
     .greyscale()
     .normalise()
-    .linear(0.55, 108) // flatten it; this sits under text at low opacity
     .png()
     .toBuffer();
+
+  // Pull the scan up to near-white. The layer is composited with multiply, so
+  // it darkens the paper by (tile / 255): a mid-grey tile would turn the cream
+  // grey. This keeps the grain and leaves the colour alone.
+  const patch = await sharp(stretched).linear(0.16, 216).png().toBuffer();
 
   const flipH = await sharp(patch).flop().png().toBuffer();
   const flipV = await sharp(patch).flip().png().toBuffer();

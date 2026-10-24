@@ -1,0 +1,31 @@
+import styles from './PageHead.module.css';
+
+/**
+ * The masthead every inner page opens with: a mono label, the display title
+ * and an optional lead.
+ *
+ * Deliberately not numbered. The old build labelled these "01—04", "02—04"
+ * and so on, which implied an order the pages do not have.
+ */
+export function PageHead({
+  label,
+  title,
+  lead,
+  children,
+}: {
+  label: string;
+  title: React.ReactNode;
+  lead?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <header className={styles.head}>
+      <div className="shell">
+        <p className={`meta ${styles.label}`}>{label}</p>
+        <h1 className={styles.title}>{title}</h1>
+        {lead && <p className={`lead ${styles.lead}`}>{lead}</p>}
+        {children}
+      </div>
+    </header>
+  );
+}

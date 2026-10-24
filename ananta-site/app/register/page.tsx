@@ -1,49 +1,132 @@
+import type { Metadata } from 'next';
+import { PageHead } from '@/components/PageHead';
+import { Countdown } from '@/components/Countdown';
+import { Cutout } from '@/components/Cutout';
+import { Strip } from '@/components/Marks';
+import styles from './page.module.css';
+import {
+  EVENT,
+  REGISTRATION,
+  REGISTRATION_URL,
+  REGISTRATION_URL_IS_PLACEHOLDER,
+  TEAM_RULES,
+} from '@/content/event';
+
+export const metadata: Metadata = {
+  title: 'Register',
+  description: `Registration for ${EVENT.name} is open ${REGISTRATION.displayRange} 2026. Teams are announced by ${REGISTRATION.teamsAnnouncedBy}.`,
+  alternates: { canonical: '/register' },
+};
+
+const CHECKLIST = [
+  'Six weeks of building, not one weekend',
+  'A team that meets the year and inclusion requirements',
+  'Original work, committed as you go from your own account',
+  'A deployed product with a public URL by the final',
+];
+
 export default function Register() {
-  const url =
-    process.env.NEXT_PUBLIC_REGISTRATION_URL ||
-    'https://forms.gle/REPLACE_WITH_REAL_FORM';
   return (
-    <main className="inner-page register-page">
-      <div className="page-top">
-        <span>ANANTA / REGISTRATION</span>
-        <span>04—04</span>
-      </div>
-      <h1 className="page-title">
-        Got a problem
-        <br />
-        worth <em>solving?</em>
-      </h1>
-      <p className="page-intro">
-        Bring the curiosity. Bring the commitment. The next six weeks are for building.
-      </p>
-      <div className="register-panel">
-        <div>
-          <span className="eyebrow">BEFORE YOU ENTER</span>
-          <h2>Know what you’re signing up for.</h2>
-          <ul>
-            <li>Six weeks of building and iteration</li>
-            <li>A team that meets the year and inclusion requirements</li>
-            <li>Original work, with authentic Git history</li>
-            <li>A deployed product for the final evaluation</li>
-          </ul>
+    <>
+      <PageHead
+        label="Registration"
+        title={
+          <>
+            Got a problem
+            <br />
+            worth <em>solving?</em>
+          </>
+        }
+        lead="Bring the curiosity and the commitment. The next six weeks are for building."
+      />
+
+      <section className={`section ${styles.main}`} aria-labelledby="window-title">
+        <div className="shell">
+          <div className={styles.grid}>
+            <div className={styles.action}>
+              <h2 id="window-title" className={styles.windowTitle}>
+                Registration closes in
+              </h2>
+
+              <Countdown
+                deadline={REGISTRATION.closesAt}
+                label={`Closes ${REGISTRATION.closesDisplayFull}`}
+                closedLabel="Registration has closed."
+              />
+
+              <p className={styles.dates}>
+                <Strip tone="saffron" rotate={-1.5}>
+                  {REGISTRATION.displayRange}
+                </Strip>
+              </p>
+
+              <a
+                className={styles.cta}
+                href={REGISTRATION_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open the registration form
+                <span className="visually-hidden"> (opens in a new tab)</span>
+              </a>
+
+              <p className={styles.announce}>
+                Teams are announced by {REGISTRATION.teamsAnnouncedBy}.
+              </p>
+
+              {REGISTRATION_URL_IS_PLACEHOLDER && (
+                <p className={styles.placeholder} role="note">
+                  <strong>Setup note:</strong> this button still points at the
+                  placeholder. Set <code>NEXT_PUBLIC_REGISTRATION_URL</code> to the
+                  approved form before launch.
+                </p>
+              )}
+            </div>
+
+            <div className={styles.before}>
+              <h2 className={styles.beforeTitle}>Before you enter</h2>
+              <ul className={styles.checklist}>
+                {CHECKLIST.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+
+              <p className={`meta ${styles.teamLabel}`}>Your team needs</p>
+              <p className={styles.team}>{TEAM_RULES[0].body}</p>
+              <p className={styles.team}>{TEAM_RULES[1].body}</p>
+            </div>
+          </div>
         </div>
-        <div className="register-action">
-          <span>REGISTRATION WINDOW</span>
-          <strong>23 OCT — 04 NOV</strong>
-          <a className="button button-dark" href={url} target="_blank" rel="noreferrer">
-            OPEN REGISTRATION ↗
-          </a>
-          <small>
-            The registration form is managed by the organisers. If this button still
-            points to the setup placeholder, add the approved form URL to{' '}
-            <code>.env.local</code>.
-          </small>
+      </section>
+
+      <section className={`section ${styles.closing}`} aria-labelledby="closing-title">
+        <div className="shell">
+          <div className={styles.closingGrid}>
+            <div>
+              <h2 id="closing-title" className={styles.closingTitle}>
+                You have done the hard part before.
+              </h2>
+              <p className={styles.closingBody}>
+                Every one of these rooms was full of people who had not shipped anything
+                yet either.
+              </p>
+              <p className={styles.fineprint}>
+                Make sure what you submit is accurate. Organisers may update operational
+                details as the event runs.
+              </p>
+            </div>
+
+            <Cutout
+              slug="devgrowth-launch"
+              sizes="(min-width: 64rem) 34vw, (min-width: 48rem) 46vw, 84vw"
+              rotate={1.8}
+              tape={['tl', 'br']}
+              showTag
+              className={styles.closingPhoto}
+            />
+          </div>
         </div>
-      </div>
-      <p className="fineprint">
-        By registering, teams should ensure the information they submit is accurate.
-        Organisers may update operational details as the event progresses.
-      </p>
-    </main>
+      </section>
+    </>
   );
 }

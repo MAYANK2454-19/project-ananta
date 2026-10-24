@@ -182,8 +182,8 @@ export default function Home() {
           </h2>
 
           <p className={styles.askLine}>
-            Registration closes {REGISTRATION.closes === '2026-11-04' ? '4 November' : ''}
-            . Teams announced by {REGISTRATION.teamsAnnouncedBy}.
+            Registration closes {REGISTRATION.closesDisplay}. Teams announced by{' '}
+            {REGISTRATION.teamsAnnouncedBy}.
           </p>
 
           <div className={styles.askActions}>

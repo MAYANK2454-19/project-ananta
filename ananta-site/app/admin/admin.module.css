@@ -1,0 +1,211 @@
+/*
+ * Admin, in the site's own language. Markup and CSS only — the auth flow,
+ * the Supabase client and the env handling belong to Mayank and are untouched.
+ */
+
+.wrap {
+  padding-block: var(--s-8);
+}
+
+.label {
+  color: var(--c-muted);
+}
+
+.title {
+  font-size: var(--t-h1);
+  margin-bottom: var(--s-4);
+}
+
+.intro {
+  max-width: 48ch;
+  color: var(--c-muted);
+}
+
+/* ------------------------------------------------------------- sign-in */
+
+.card {
+  width: 100%;
+  max-width: 28rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.card .label {
+  margin-bottom: var(--s-5);
+}
+
+.card .title {
+  font-size: var(--t-h2);
+}
+
+.form {
+  display: grid;
+  gap: var(--s-5);
+  margin-top: var(--s-7);
+}
+
+.field {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.field span {
+  color: var(--c-muted);
+}
+
+/* Square, inked inputs — no rounded corners, no inner shadow. */
+.field input {
+  width: 100%;
+  padding: var(--s-3) var(--s-4);
+  background: var(--c-paper);
+  border: 1px solid var(--c-rule-strong);
+  border-radius: 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-base);
+}
+
+.field input:focus {
+  border-color: var(--c-ink);
+}
+
+.submit {
+  width: 100%;
+  padding: var(--s-4) var(--s-6);
+  background: var(--c-ink);
+  color: var(--c-paper);
+  border: 0;
+  border-radius: 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.submit:hover:not(:disabled) {
+  background: var(--c-saffron);
+  color: var(--c-ink);
+}
+
+.submit:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+.message {
+  margin-top: var(--s-5);
+  padding: var(--s-3) var(--s-4);
+  border-left: 3px solid var(--c-saffron);
+  background: var(--c-paper-deep);
+  font-size: var(--t-sm);
+}
+
+.note {
+  margin-top: var(--s-6);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--c-rule);
+  font-size: var(--t-sm);
+  color: var(--c-muted);
+}
+
+/* ----------------------------------------------------------- dashboard */
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-bottom: var(--s-5);
+  margin-bottom: var(--s-6);
+  border-bottom: 1px solid var(--c-rule-strong);
+}
+
+.signOut {
+  background: none;
+  border: 1px solid var(--c-ink);
+  border-radius: 0;
+  padding: var(--s-2) var(--s-4);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.signOut:hover {
+  background: var(--c-ink);
+  color: var(--c-paper);
+}
+
+.modules {
+  margin: var(--s-8) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--c-rule-strong);
+}
+
+/* Rows with hairlines, not a grid of identical cards. */
+.module {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-6) 0;
+  border-bottom: 1px solid var(--c-rule);
+}
+
+.moduleNo {
+  color: var(--c-saffron-text);
+}
+
+.moduleName {
+  font-size: var(--t-h3);
+}
+
+.moduleBody {
+  max-width: 60ch;
+  color: var(--c-muted);
+}
+
+.status {
+  justify-self: start;
+  margin-top: var(--s-2);
+  padding: 3px var(--s-3);
+  background: var(--c-navy);
+  color: var(--c-paper);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.notice {
+  margin-top: var(--s-6);
+  max-width: 62ch;
+  font-size: var(--t-sm);
+  color: var(--c-muted);
+}
+
+@media (min-width: 48rem) {
+  .module {
+    grid-template-columns: 16rem 1fr;
+    gap: var(--s-2) var(--s-6);
+    align-items: baseline;
+  }
+
+  .moduleNo {
+    grid-row: 1;
+  }
+
+  .moduleName {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .moduleBody,
+  .status {
+    grid-column: 2;
+  }
+}

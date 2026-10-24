@@ -1,0 +1,30 @@
+.head {
+  padding-block: var(--s-7) var(--s-6);
+  border-bottom: 1px solid var(--c-rule);
+}
+
+.label {
+  color: var(--c-muted);
+  margin-bottom: var(--s-5);
+}
+
+.title {
+  font-size: var(--t-h1);
+  max-width: 16ch;
+}
+
+.lead {
+  margin-top: var(--s-6);
+  max-width: 38ch;
+  color: var(--c-muted);
+}
+
+@media (min-width: 48rem) {
+  .head {
+    padding-block: var(--s-8) var(--s-7);
+  }
+
+  .lead {
+    max-width: 46ch;
+  }
+}

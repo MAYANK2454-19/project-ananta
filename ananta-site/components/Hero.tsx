@@ -106,7 +106,7 @@ export function Hero() {
           <p className={styles.deadline}>
             <span className="meta">Register by</span>
             <Strip tone="saffron" rotate={-1.4} className={styles.deadlineDate}>
-              {REGISTRATION.closes === '2026-11-04' ? '4 Nov' : REGISTRATION.closes}
+              {REGISTRATION.closesDisplayShort}
             </Strip>
           </p>
         </div>

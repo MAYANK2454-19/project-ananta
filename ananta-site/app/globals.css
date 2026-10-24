@@ -26,7 +26,10 @@
    * navy (from the approved email poster): dark sections and footer.
    */
   --c-saffron: #f07800;
+  /* Graphics and fills only — 3.64:1 on paper, below AA for text. */
   --c-saffron-deep: #c85f00;
+  /* Small saffron text: 5.19:1 on paper, 4.74:1 on paper-deep. */
+  --c-saffron-text: #9e4f00;
   --c-green: #007830;
   --c-navy: #13204a;
 
@@ -144,6 +147,7 @@ textarea {
 /* ------------------------------------------------------------ the paper */
 
 body {
+  position: relative;
   min-height: 100dvh;
   background-color: var(--c-paper);
   color: var(--c-ink);
@@ -155,20 +159,22 @@ body {
 }
 
 /*
- * The real scanned paper, not a CSS gradient. Fixed so it reads as the sheet
- * the page is printed on rather than something that scrolls with the content.
- * Low opacity and behind everything, via a pseudo-element so it never affects
- * the contrast of text sitting on it.
+ * The real scanned paper, not a CSS gradient.
+ *
+ * Absolute rather than fixed, so it covers the whole document instead of just
+ * the first viewport — a fixed layer leaves everything below the fold flat.
+ * Behind everything, via a pseudo-element, so it never touches the contrast of
+ * the text sitting on it.
  */
 body::before {
   content: '';
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: -1;
   background-image: url('/textures/paper.jpg');
   background-size: 520px auto;
   background-repeat: repeat;
-  opacity: 0.38;
+  opacity: 0.5;
   mix-blend-mode: multiply;
   pointer-events: none;
 }
@@ -284,6 +290,12 @@ a:hover {
 
 .link:hover {
   background: color-mix(in srgb, var(--c-green) 12%, transparent);
+}
+
+/* Inline code is content, so it keeps the 12px floor even inside small text. */
+code {
+  font-family: var(--f-mono);
+  font-size: max(0.9em, 0.75rem);
 }
 
 hr,

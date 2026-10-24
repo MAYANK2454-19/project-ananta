@@ -1,0 +1,130 @@
+.notice {
+  margin-top: var(--s-6);
+  padding: var(--s-4);
+  border-left: 3px solid var(--c-saffron);
+  background: var(--c-paper-deep);
+  font-size: var(--t-sm);
+  max-width: 60ch;
+}
+
+/* ---------------------------------------------------------------- group */
+
+.group {
+  padding-block: var(--s-7);
+}
+
+.featuredGroup {
+  background: var(--c-paper-deep);
+}
+
+.groupHead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin-bottom: var(--s-7);
+  padding-bottom: var(--s-4);
+  border-bottom: 1px solid var(--c-rule-strong);
+}
+
+.groupTitle {
+  font-size: var(--t-h2);
+}
+
+.groupBlurb {
+  font-family: var(--f-serif);
+  font-style: italic;
+  color: var(--c-muted);
+}
+
+/* ---------------------------------------------------------------- board */
+
+/*
+ * Two columns at 360px, as asked. The uneven vertical offsets below are what
+ * stop this reading as a grid of identical tiles.
+ */
+/*
+ * auto-fill with a bounded track, not a fixed column count: a group of two
+ * and a group of twelve both get cards the same size, filling from the left.
+ * Two columns at 360 as a floor.
+ */
+.board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(9.5rem, 46%), 1fr));
+  justify-content: start;
+  gap: var(--s-7) var(--s-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Stagger: every second card hangs a little lower, like a pinned board. */
+.pin:nth-child(even) {
+  margin-top: var(--s-6);
+}
+
+.pin:nth-child(4n + 3) {
+  margin-top: calc(var(--s-3) * -1);
+}
+
+.divider {
+  margin-top: var(--s-8);
+}
+
+/* ------------------------------------------------------------- 768px+ */
+
+@media (min-width: 48rem) {
+  .group {
+    padding-block: var(--s-8);
+  }
+
+  .groupHead {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-5);
+  }
+
+  .board {
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 13rem));
+    gap: var(--s-8) var(--s-6);
+  }
+
+  /* Faculty are shown larger: wider track, so fewer fit per row. */
+  .boardFeatured {
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 18rem));
+  }
+
+  .pin:nth-child(3n + 2) {
+    margin-top: var(--s-7);
+  }
+}
+
+@media (min-width: 64rem) {
+  .board {
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 14rem));
+  }
+
+  .boardFeatured {
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 20rem));
+  }
+}
+
+/* ----------------------------------------------------------------- join */
+
+.join {
+  background: var(--c-navy);
+  color: var(--c-paper);
+}
+
+.joinTitle {
+  font-size: var(--t-h2);
+  max-width: 16ch;
+  margin-bottom: var(--s-4);
+}
+
+.joinBody {
+  font-family: var(--f-serif);
+  font-size: var(--t-lead);
+  max-width: 42ch;
+  color: color-mix(in srgb, var(--c-paper) 88%, var(--c-navy));
+}

@@ -62,19 +62,27 @@
 }
 
 /*
- * The marks are dark-on-light artwork sitting on navy, so they are knocked
- * back to paper white rather than floated on little boxes.
+ * Each mark is printed on a small paper tile rather than recoloured.
+ * SANGAM's and DevGrowth's files are opaque artwork with their own
+ * backgrounds, so knocking them to white produced solid white squares — and
+ * repainting another organisation's logo is not ours to do anyway.
  */
+.logos li {
+  display: flex;
+  background: var(--c-paper);
+  padding: var(--s-2);
+}
+
 .logo {
-  width: 44px;
-  height: auto;
-  filter: brightness(0) invert(1);
-  opacity: 0.88;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 @media (min-width: 48rem) {
   .logo {
-    width: 56px;
+    width: 48px;
+    height: 48px;
   }
 }
 

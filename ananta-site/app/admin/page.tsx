@@ -2,6 +2,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
+import styles from './admin.module.css';
 
 /**
  * useSearchParams() opts the subtree into client-side rendering, and Next
@@ -47,16 +48,19 @@ function AdminSignIn() {
     }
   }
   return (
-    <main className="admin-wrap">
-      <div className="admin-card">
-        <span className="eyebrow">ANANTA / CONTROL ROOM</span>
-        <h1>
+    <section className={styles.wrap}>
+      <div className={styles.card}>
+        <p className={`meta ${styles.label}`}>ANANTA / Organisers</p>
+        <h1 className={styles.title}>
           Admin <em>access.</em>
         </h1>
-        <p>This area is restricted to the authorised organiser account.</p>
-        <form onSubmit={signIn}>
-          <label>
-            Email address
+        <p className={styles.intro}>
+          This area is restricted to the approved organiser accounts.
+        </p>
+
+        <form onSubmit={signIn} className={styles.form}>
+          <label className={styles.field}>
+            <span className="meta">Email address</span>
             <input
               type="email"
               value={email}
@@ -65,8 +69,8 @@ function AdminSignIn() {
               autoComplete="username"
             />
           </label>
-          <label>
-            Password
+          <label className={styles.field}>
+            <span className="meta">Password</span>
             <input
               type="password"
               value={password}
@@ -75,16 +79,22 @@ function AdminSignIn() {
               autoComplete="current-password"
             />
           </label>
-          <button className="button button-dark" disabled={loading}>
-            {loading ? 'CHECKING…' : 'SIGN IN ↗'}
+          <button className={styles.submit} disabled={loading}>
+            {loading ? 'Checking…' : 'Sign in'}
           </button>
         </form>
-        {message && <p className="form-message">{message}</p>}
-        <small>
-          Admin access is restricted by the server-side ADMIN_EMAIL allowlist. Create the
-          approved account in Supabase; never put credentials in source code.
-        </small>
+
+        {message && (
+          <p className={styles.message} role="status">
+            {message}
+          </p>
+        )}
+
+        <p className={styles.note}>
+          Access is restricted by a server-side allowlist. Create the approved account in
+          Supabase; never put credentials in source code.
+        </p>
       </div>
-    </main>
+    </section>
   );
 }
