@@ -21,20 +21,20 @@
 .inner {
   fill: none;
   stroke: var(--c-saffron-deep);
-  stroke-width: 0.9;
+  stroke-width: 1.35;
 }
 
 .inner {
-  stroke-width: 0.6;
-  stroke-dasharray: 1.5 1.5;
+  stroke-width: 0.9;
+  stroke-dasharray: 2.25 2.25;
   opacity: 0.75;
 }
 
 .ringText {
   font-family: var(--f-mono);
-  font-size: 5.6px;
+  /* A real 12px: the viewBox is 1:1 with the default 150px render. */
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.26px;
   fill: var(--c-saffron-deep);
   text-transform: uppercase;
 }

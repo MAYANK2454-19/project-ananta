@@ -50,38 +50,43 @@ export function Countdown({
     return () => clearInterval(id);
   }, [target]);
 
-  const units =
-    left == null
-      ? null
-      : ([
-          ['Days', left.days],
-          ['Hrs', left.hours],
-          ['Min', left.minutes],
-          ['Sec', left.seconds],
-        ] as const);
+  /*
+   * Before the first tick the boxes are rendered with placeholder digits
+   * rather than omitted, so the server markup and the first client render
+   * match and the real numbers do not shift the page when they arrive.
+   */
+  const units = (
+    [
+      ['Days', left?.days],
+      ['Hrs', left?.hours],
+      ['Min', left?.minutes],
+      ['Sec', left?.seconds],
+    ] as const
+  ).map(([unit, value]) => [unit, value === undefined ? null : value] as const);
+
+  const expired = left === null;
 
   return (
     <div className={styles.wrap}>
-      {units && (
+      {!expired && (
         <p className={styles.digits} aria-hidden="true">
           {units.map(([unit, value]) => (
             <span key={unit} className={styles.unit}>
-              <span className={styles.value}>{pad(value)}</span>
+              <span className={styles.value}>{value === null ? '--' : pad(value)}</span>
               <span className={styles.unitLabel}>{unit}</span>
             </span>
           ))}
         </p>
       )}
 
-      {/* undefined = not mounted yet; null = deadline passed. */}
-      {left === null && (
+      {expired && (
         <p className={styles.closed} aria-hidden="true">
           {closedLabel}
         </p>
       )}
 
       <p className={styles.label}>
-        <time dateTime={deadline}>{left === null ? closedLabel : label}</time>
+        <time dateTime={deadline}>{expired ? closedLabel : label}</time>
       </p>
     </div>
   );

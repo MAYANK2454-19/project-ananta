@@ -62,7 +62,7 @@ export function Hero() {
         {/* Wrapper owns the placement; Stamp owns its own internals. Putting
             both classes on one element would make their rules collide. */}
         <div className={styles.stamp}>
-          <Stamp size={130} />
+          <Stamp size={150} />
         </div>
 
         <p className={styles.strips}>

@@ -294,10 +294,14 @@
     animation-delay: 620ms;
   }
 
+  /*
+   * Transform only, no opacity: the wordmark is the LCP element, and an
+   * element still at opacity 0 does not count as painted. Fading it in cost
+   * ~4.3s of render delay on throttled mobile. It still drops into place.
+   */
   @keyframes drop {
     from {
-      opacity: 0;
-      transform: translateY(-0.12em);
+      transform: translateY(-0.14em);
     }
   }
 

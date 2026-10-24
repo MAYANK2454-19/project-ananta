@@ -10,6 +10,37 @@
  * by `npm run contrast`; the ratios are in that script's output.
  */
 
+/* ------------------------------------------------- display font fallbacks */
+
+/*
+ * Width-matched stand-ins for the condensed display face, so the wordmark does
+ * not reflow when the real font lands.
+ *
+ * size-adjust values are measured, not guessed: the subset face sets the same
+ * string at 87.6% of Arial Narrow's width and 71.8% of Arial's. Two faces
+ * because those two numbers differ — whichever the system actually has wins,
+ * and both end up occupying the same space as the real font.
+ *
+ * Vertical metrics are left alone: every place display type is set also sets
+ * an explicit line-height, so the line boxes do not depend on the face.
+ */
+@font-face {
+  font-family: 'DisplayFallbackNarrow';
+  src:
+    local('Arial Narrow'), local('Liberation Sans Narrow'), local('Nimbus Sans Narrow');
+  size-adjust: 87.6%;
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DisplayFallbackWide';
+  src: local('Arial'), local('Helvetica'), local('Liberation Sans'), local('Roboto');
+  size-adjust: 71.8%;
+  font-weight: 800;
+  font-style: normal;
+}
+
 /* ---------------------------------------------------------------- tokens */
 
 :root {
@@ -55,7 +86,8 @@
   --c-tape: color-mix(in srgb, #d8c9a8 76%, transparent);
 
   /* --- type ----------------------------------------------------------- */
-  --f-display: var(--font-display), 'Arial Narrow', sans-serif;
+  --f-display:
+    var(--font-display), 'DisplayFallbackNarrow', 'DisplayFallbackWide', sans-serif;
   --f-serif: var(--font-serif), Georgia, serif;
   --f-mono: var(--font-mono), ui-monospace, Menlo, monospace;
   --f-deva: var(--font-deva), serif;

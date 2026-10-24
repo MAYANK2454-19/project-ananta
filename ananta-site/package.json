@@ -17,7 +17,8 @@
     "team:photos": "node scripts/process-team-photos.mjs",
     "contrast": "node scripts/contrast.mjs",
     "textures": "node scripts/process-textures.mjs",
-    "assets": "npm run textures && npm run photos"
+    "assets": "npm run textures && npm run photos",
+    "fonts": "node scripts/subset-display-font.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
@@ -36,6 +37,7 @@
     "prettier": "^3.9.10",
     "sharp": "^0.34.5",
     "simple-git-hooks": "^2.14.0",
+    "subset-font": "^2.4.0",
     "typescript": "^5.8.0"
   },
   "engines": {

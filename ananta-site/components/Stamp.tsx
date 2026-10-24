@@ -4,14 +4,25 @@ import { useEffect, useRef } from 'react';
 import styles from './Stamp.module.css';
 import { EVENT } from '@/content/event';
 
-const RING_TEXT = 'ONE LIVE PRODUCT · SIX WEEKS · ALL YEARS · ';
+const RING_TEXT = 'ONE LIVE PRODUCT · SIX WEEKS · ALL YEARS ·';
+
+/**
+ * The viewBox is 1:1 with the default rendered size, so the ring text can be
+ * a real 12px rather than a fraction of a unit that only looks right once the
+ * viewBox has been scaled up.
+ */
+const BOX = 150;
+const C = BOX / 2;
+
+const RING_RADIUS = 60;
+const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
 
 /** Circle path for the textPath, drawn clockwise from the left. */
 const ring = (r: number) =>
-  `M 50 50 m -${r} 0 a ${r} ${r} 0 1 1 ${r * 2} 0 a ${r} ${r} 0 1 1 -${r * 2} 0`;
+  `M ${C} ${C} m -${r} 0 a ${r} ${r} 0 1 1 ${r * 2} 0 a ${r} ${r} 0 1 1 -${r * 2} 0`;
 
 type Props = {
-  /** Rendered width. The SVG itself is a 100x100 viewBox. */
+  /** Rendered width. The SVG viewBox is {BOX}x{BOX}. */
   size?: number;
   className?: string;
 };
@@ -24,7 +35,7 @@ type Props = {
  * visitor prefers reduced motion — the stamp then simply sits still, which is
  * what a stamp does anyway.
  */
-export function Stamp({ size = 132, className }: Props) {
+export function Stamp({ size = 150, className }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,17 +69,24 @@ export function Stamp({ size = 132, className }: Props) {
       className={[styles.stamp, className].filter(Boolean).join(' ')}
       style={{ width: size, height: size }}
     >
-      <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <svg viewBox={`0 0 ${BOX} ${BOX}`} aria-hidden="true" focusable="false">
         <defs>
-          <path id="stamp-ring" d={ring(40)} fill="none" />
+          <path id="stamp-ring" d={ring(RING_RADIUS)} fill="none" />
         </defs>
 
-        <circle cx="50" cy="50" r="47.5" className={styles.outer} />
-        <circle cx="50" cy="50" r="30" className={styles.inner} />
+        <circle cx={C} cy={C} r={71} className={styles.outer} />
+        <circle cx={C} cy={C} r={45} className={styles.inner} />
 
         <text className={styles.ringText}>
-          <textPath href="#stamp-ring" startOffset="0">
-            {RING_TEXT.repeat(2)}
+          {/* Stretched to the circumference so one pass closes the ring
+              exactly, instead of repeating and overflowing. */}
+          <textPath
+            href="#stamp-ring"
+            startOffset="0"
+            textLength={RING_LENGTH}
+            lengthAdjust="spacing"
+          >
+            {RING_TEXT}
           </textPath>
         </text>
       </svg>
