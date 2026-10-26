@@ -19,7 +19,7 @@ defaults:
 
 jobs:
   quality:
-    name: lint / typecheck / build
+    name: lint · typecheck · build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -74,3 +74,4 @@ jobs:
 
       - name: Scan full history
         run: gitleaks detect --source . --redact --verbose --exit-code 1
+
