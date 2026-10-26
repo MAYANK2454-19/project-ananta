@@ -166,14 +166,13 @@ export const PRIZES = {
     { place: '2nd', amount: '₹3,000' },
     { place: '3rd', amount: '₹2,000' },
   ],
-  certificates: 50,
 } as const;
 
 export const TEAM_RULES = [
   {
     n: '01',
     title: 'Who is on a team',
-    body: 'A 3rd-year team lead, 1st- and 2nd-year developers, a 4th-year student mentor and a faculty mentor.',
+    body: 'A 3rd-year team lead, 1st- and 2nd-year developers, and a 4th-year student mentor.',
   },
   {
     n: '02',
@@ -216,4 +215,5 @@ export const REGISTRATION_URL =
 /** "SANGAM × DevGrowth × Code Club" */
 export const PRESENTED_BY = EVENT.presenters.join(' × ');
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://ananta.smvdu.ac.in';
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://project-ananta-zvut.vercel.app';

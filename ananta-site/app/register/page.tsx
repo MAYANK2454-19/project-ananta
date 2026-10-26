@@ -71,7 +71,7 @@ export default function Register() {
               </p>
 
               {/* For a laptop or a projected slide: scan it with a phone. Hidden
-                  on phones, where the button above is the way in. */}
+    on phones, where the button above is the way in. */}
               <figure className={styles.qr}>
                 <Image
                   src="/register-qr.svg"
