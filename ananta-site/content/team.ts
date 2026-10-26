@@ -27,6 +27,7 @@ export type Person = {
   photo?: string;
   linkedin?: string;
   github?: string;
+  easterEggUrl?: string;
 };
 
 export type TeamGroup = {
@@ -174,6 +175,7 @@ export const TEAM: Person[] = [
     role: 'Outreach and Alumni Lead',
     group: 'organising-core',
     club: 'sangam',
+    easterEggUrl: 'https://aryavsparihar.in/',
   },
 
   // --- DevGrowth -----------------------------------------------------------
