@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format:check": "node scripts/check-format.mjs",
     "typecheck": "tsc --noEmit",
     "prebuild": "node scripts/check-env-safety.mjs && node scripts/check-team.mjs",
     "prepare": "simple-git-hooks || true",

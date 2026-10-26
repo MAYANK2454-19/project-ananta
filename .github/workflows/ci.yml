@@ -1,4 +1,4 @@
-name: CI
+﻿name: CI
 
 on:
   pull_request:
@@ -6,7 +6,6 @@ on:
   push:
     branches: [main]
 
-# Cancel superseded runs on the same branch.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -20,10 +19,12 @@ defaults:
 
 jobs:
   quality:
-    name: lint · typecheck · build
+    name: lint / typecheck / build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v5
         with:
@@ -35,6 +36,9 @@ jobs:
 
       - name: Prettier
         run: npm run format:check
+        env:
+          FORMAT_BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          FORMAT_HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
       - name: ESLint
         run: npm run lint
@@ -45,8 +49,6 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # Placeholders only. Real values live in the hosting dashboard.
-          # The build must not depend on a live Supabase project.
           NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
           NEXT_PUBLIC_REGISTRATION_URL: https://example.com/register
@@ -60,7 +62,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          # Full history: a secret removed in a later commit is still a secret.
           fetch-depth: 0
 
       - name: Install gitleaks
