@@ -231,3 +231,12 @@
 .featured .name {
   font-size: 1.6rem;
 }
+.easterEggLink {
+  display: block;
+  text-decoration: none;
+}
+
+.easterEggLink:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
