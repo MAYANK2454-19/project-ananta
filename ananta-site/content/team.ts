@@ -1,8 +1,9 @@
 /**
  * The people behind ANANTA.
  *
- * Static on purpose — no database, no Supabase. Editing this file is the whole
- * job of adding someone. See "Adding a team member" in the root README.
+ * These are the shipped defaults. Organisers can override the whole list from
+ * /admin/content without a deploy; a photo still has to be committed under
+ * public/team first. See "Adding a team member" in the root README.
  *
  * Faculty names, designations and order were confirmed by the organisers. Student
  * names and roles are from the SANGAM deck (25 Sept 2026); where the deck lists
@@ -27,7 +28,10 @@ export type Person = {
   photo?: string;
   linkedin?: string;
   github?: string;
+  /** Optional destination opened when the person's photo is clicked. */
   easterEggUrl?: string;
+  /** A personal site. Full URL, https included. */
+  website?: string;
 };
 
 export type TeamGroup = {
@@ -110,7 +114,7 @@ export const TEAM: Person[] = [
     school: 'SoECE',
   },
 
-  // --- Organising core (SANGAM) --------------------------------------------
+  // --- Organising core (SANGAM) ----------------------------------------------
   // Everyone here also belongs to a club, so the card carries that club, and
   // their club role is folded into this one. Each person appears once.
   {
@@ -119,6 +123,7 @@ export const TEAM: Person[] = [
     role: 'President · DevGrowth Coordinator',
     group: 'organising-core',
     club: 'devgrowth',
+    linkedin: 'https://www.linkedin.com/in/yash-srivastava-46a02a28b/',
   },
   {
     name: 'Sachin Tripathi',
@@ -126,6 +131,7 @@ export const TEAM: Person[] = [
     role: 'Vice President · DevGrowth Co-Coordinator',
     group: 'organising-core',
     club: 'devgrowth',
+    linkedin: 'https://www.linkedin.com/in/sachin-tripathi-2314a6259/',
   },
   {
     name: 'Kartikey Saxena',
@@ -133,6 +139,7 @@ export const TEAM: Person[] = [
     role: 'Vice President · DevGrowth Co-Coordinator',
     group: 'organising-core',
     club: 'devgrowth',
+    linkedin: 'https://www.linkedin.com/in/kartikey-saxena-b16193290/',
   },
   {
     name: 'Maneesh Kumar',
@@ -140,6 +147,7 @@ export const TEAM: Person[] = [
     role: 'Finance Lead · Code Club Coordinator',
     group: 'organising-core',
     club: 'codeclub',
+    linkedin: 'https://www.linkedin.com/in/0aimaneesh/',
   },
   {
     name: 'Shubham Saini',
@@ -147,6 +155,7 @@ export const TEAM: Person[] = [
     role: 'Technical Lead',
     group: 'organising-core',
     club: 'devgrowth',
+    linkedin: 'https://www.linkedin.com/in/shubham-saini-b76741274/',
   },
   {
     name: 'Mukti Porwal',
@@ -161,6 +170,7 @@ export const TEAM: Person[] = [
     role: 'Management Lead',
     group: 'organising-core',
     club: 'devgrowth',
+    linkedin: 'https://www.linkedin.com/in/naresh-kumar-6692a3324/',
   },
   {
     name: 'Akshit Raj',
@@ -168,6 +178,7 @@ export const TEAM: Person[] = [
     role: 'Co-Management Lead',
     group: 'organising-core',
     club: 'devgrowth',
+    linkedin: 'https://www.linkedin.com/in/akshit-raj-59bb34289/',
   },
   {
     name: 'Aryaveer Singh Parihar',
@@ -175,10 +186,13 @@ export const TEAM: Person[] = [
     role: 'Outreach and Alumni Lead',
     group: 'organising-core',
     club: 'sangam',
+    linkedin: 'https://www.linkedin.com/in/aryavsparihar/',
+    github: 'https://github.com/aryavsparihar',
+    website: 'https://aryavsparihar.in',
     easterEggUrl: 'https://aryavsparihar.in/',
   },
 
-  // --- DevGrowth -----------------------------------------------------------
+  // --- DevGrowth --------------------------------------------------------------
   {
     name: 'Subham Prasad',
     role: 'Core Team',
@@ -244,13 +258,15 @@ export const TEAM: Person[] = [
     photo: 'armaan',
   },
 
-  // --- Code Club -----------------------------------------------------------
+  // --- Code Club --------------------------------------------------------------
   {
     name: 'Tejas Singh',
     role: 'Core Team',
     group: 'codeclub',
     club: 'codeclub',
     photo: 'tejas-singh',
+    linkedin: 'https://www.linkedin.com/in/tejas-singh-4695a1386/',
+    github: 'https://github.com/tejas-singh-0212',
   },
   {
     name: 'Himanshu Soni',
@@ -293,20 +309,24 @@ export const TEAM: Person[] = [
 export const isPlaceholder = (p: Person) =>
   p.name.trim().toUpperCase().startsWith('TODO');
 
-export const peopleIn = (group: TeamGroupId) => TEAM.filter((p) => p.group === group);
+/** Return all members belonging to a group. */
+export const peopleIn = (group: TeamGroupId) =>
+  TEAM.filter((person) => person.group === group);
 
+/** Return all placeholder members. */
 export const placeholders = () => TEAM.filter(isPlaceholder);
 
 /** Honorifics are not part of anyone's initials. */
 const TITLES = /^(dr|prof|mr|ms|mrs)\.?$/i;
 
-/** "Asha Rani" -> "AR", "Dr. Asha Rani" -> "AR". Placeholders say so rather than showing "TN". */
+/** "Asha Rani" -> "AR", "Dr. Asha Rani" -> "AR". */
 export function initials(name: string): string {
   if (isPlaceholder({ name } as Person)) return 'TBC';
+
   return name
     .split(/\s+/)
-    .filter((w) => w && !TITLES.test(w))
+    .filter((word) => word && !TITLES.test(word))
     .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? '')
+    .map((word) => word[0]?.toUpperCase() ?? '')
     .join('');
 }
