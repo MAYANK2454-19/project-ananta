@@ -51,7 +51,7 @@ type ImportAuditSummary = {
  * has been verified by the route.
  */
 async function writeImportAudit(
-  adminClient: ReturnType<typeof createSupabaseClient>,
+  adminClient: ReturnType<typeof createSupabaseClient<any>>,
   actor: { id: string; email?: string },
   summary: ImportAuditSummary,
 ): Promise<boolean> {
