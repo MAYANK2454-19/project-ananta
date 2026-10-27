@@ -1,6 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { emailAllowed, friendlyError, normaliseUrl, safeNext } from '../lib/portal.ts';
+import {
+  CV_MAX_BYTES,
+  emailAllowed,
+  friendlyError,
+  normaliseUrl,
+  safeNext,
+  validateCvUpload,
+} from '../lib/portal.ts';
 
 test('safeNext rejects external and malformed redirects', () => {
   assert.equal(safeNext('/account'), '/account');
@@ -40,4 +47,30 @@ test('friendlyError maps common auth errors to actionable messages', () => {
     'Could not reach the server. Check your connection and try again.',
   );
   assert.equal(friendlyError({ message: 'unexpected issue' }), 'unexpected issue');
+});
+
+test('validateCvUpload accepts supported, non-empty files under the size limit', () => {
+  assert.equal(validateCvUpload({ type: 'application/pdf', size: 1024 }), null);
+  assert.equal(
+    validateCvUpload({
+      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      size: CV_MAX_BYTES,
+    }),
+    null,
+  );
+});
+
+test('validateCvUpload rejects unsupported, empty, and oversized files', () => {
+  assert.equal(
+    validateCvUpload({ type: 'text/html', size: 100 }),
+    'Upload the CV as a PDF or Word document.',
+  );
+  assert.equal(
+    validateCvUpload({ type: 'application/pdf', size: 0 }),
+    'Choose a non-empty CV file.',
+  );
+  assert.equal(
+    validateCvUpload({ type: 'application/pdf', size: CV_MAX_BYTES + 1 }),
+    'Keep the CV under 5 MB.',
+  );
 });

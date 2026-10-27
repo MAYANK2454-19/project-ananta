@@ -5,8 +5,8 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createClient } from '@/lib/supabase';
 import {
   CONSENT,
-  CV_MAX_BYTES,
   CV_TYPES,
+  validateCvUpload,
   EXPERIENCE,
   SKILLS,
   YEARS,
@@ -16,6 +16,8 @@ import {
   type RegistrationForm as Form,
 } from '@/lib/portal';
 import styles from './Portal.module.css';
+
+const CV_ACCEPT = ['.pdf', '.doc', '.docx', ...CV_TYPES].join(',');
 
 const EMPTY: Form = {
   full_name: '',
@@ -132,24 +134,35 @@ export function RegistrationForm({
 
   function pickCv(file: File | undefined) {
     setError('');
-    if (!file) return setCvFile(null);
-    if (!CV_TYPES.includes(file.type)) {
-      setError('Upload the CV as a PDF or Word document.');
+    if (!file) {
+      setCvFile(null);
       return;
     }
-    if (file.size > CV_MAX_BYTES) {
-      setError('Keep the CV under 5 MB.');
+
+    const validationError = validateCvUpload(file);
+    if (validationError) {
+      // Never keep an earlier selection after the user chose an invalid file.
+      setCvFile(null);
+      setError(validationError);
       return;
     }
+
     setCvFile(file);
   }
 
   async function viewCv() {
     if (!form.cv_path) return;
-    const { data } = await createClient()
-      .storage.from('cvs')
-      .createSignedUrl(form.cv_path, 60);
-    if (data?.signedUrl) window.open(data.signedUrl, '_blank', 'noopener');
+    try {
+      const { data, error } = await createClient()
+        .storage.from('cvs')
+        .createSignedUrl(form.cv_path, 60);
+      if (error || !data?.signedUrl) {
+        throw error ?? new Error('Could not create a secure link for this CV.');
+      }
+      window.open(data.signedUrl, '_blank', 'noopener');
+    } catch (err) {
+      setError(friendlyError(err, 'Could not open the CV.'));
+    }
   }
 
   async function submit(e: FormEvent<HTMLFormElement>) {
@@ -168,6 +181,7 @@ export function RegistrationForm({
     const supabase = createClient();
     const previousCv = saved?.cv_path ?? null;
     let cvPath = form.cv_path;
+    let uploadedCvPath: string | null = null;
 
     try {
       if (cvFile) {
@@ -179,6 +193,7 @@ export function RegistrationForm({
           .from('cvs')
           .upload(cvPath, cvFile, { contentType: cvFile.type, upsert: false });
         if (uploadError) throw uploadError;
+        uploadedCvPath = cvPath;
       }
 
       const { data, error } = await supabase.rpc('submit_registration', {
@@ -190,10 +205,22 @@ export function RegistrationForm({
         },
       });
       if (error) throw error;
+      // The database now references the upload, so the failure cleanup must not
+      // remove it even if deleting the previous CV subsequently fails.
+      uploadedCvPath = null;
 
       // The old file is only removed once the new one is on record.
       if (cvFile && previousCv && previousCv !== cvPath) {
-        await supabase.storage.from('cvs').remove([previousCv]);
+        try {
+          const { error: removeError } = await supabase.storage
+            .from('cvs')
+            .remove([previousCv]);
+          if (removeError) {
+            console.error('Could not remove the previous CV:', removeError.message);
+          }
+        } catch (removeError) {
+          console.error('Could not remove the previous CV after save:', removeError);
+        }
       }
 
       const next = data as MyRegistration;
@@ -204,7 +231,31 @@ export function RegistrationForm({
       setJustSaved(true);
       top.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (err) {
-      setError(friendlyError(err, 'Could not save your registration.'));
+      let cleanupMessage = '';
+      if (uploadedCvPath) {
+        try {
+          const { error: cleanupError } = await supabase.storage
+            .from('cvs')
+            .remove([uploadedCvPath]);
+          if (cleanupError) {
+            console.error(
+              'Could not remove an unreferenced CV upload:',
+              cleanupError.message,
+            );
+            cleanupMessage =
+              ' The uploaded CV could not be cleaned up automatically; ' +
+              'contact the organisers if this repeats.';
+          }
+        } catch (cleanupError) {
+          console.error('Could not remove an unreferenced CV upload:', cleanupError);
+          cleanupMessage =
+            ' The uploaded CV could not be cleaned up automatically; ' +
+            'contact the organisers if this repeats.';
+        }
+      }
+      setError(
+        `${friendlyError(err, 'Could not save your registration.')}${cleanupMessage}`,
+      );
     } finally {
       setSaving(false);
     }
@@ -498,7 +549,7 @@ export function RegistrationForm({
                   <input
                     className={styles.visuallyHiddenInput}
                     type="file"
-                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    accept={CV_ACCEPT}
                     onChange={(e) => pickCv(e.target.files?.[0])}
                   />
                 </label>
