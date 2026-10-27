@@ -34,13 +34,6 @@ jobs:
 
       - run: npm ci
 
-      - name: Temporary canonical formatter output
-        run: |
-          npx prettier --write components/portal/RegistrationForm.tsx
-          echo "REGISTRATION_FORM_BEGIN"
-          cat components/portal/RegistrationForm.tsx
-          echo "REGISTRATION_FORM_END"
-
       - name: Prettier
         run: npm run format:check
         env:
