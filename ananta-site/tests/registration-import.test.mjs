@@ -12,7 +12,9 @@ test('normaliseHeader removes accents, punctuation and case', () => {
   assert.equal(normaliseHeader('  Student Name  '), 'studentname');
 });
 
-test('findHeader resolves aliases against normalized Google Forms headings', () => {
+test(
+  'findHeader resolves aliases against normalized Google Forms headings',
+  () => {
   assert.equal(
     findHeader(
       ['Timestamp', 'Student Name', 'Email Address'],
@@ -29,9 +31,10 @@ test('makeSourceId is stable across column order and surrounding whitespace', ()
     'Email Address': 'mayank@smvdu.ac.in',
     'Full Name': 'Mayank',
   };
-  assert.equal(makeSourceId(first), makeSourceId(reordered));
-  assert.match(makeSourceId(first), /^[a-f0-9]{64}$/);
-});
+    assert.equal(makeSourceId(first), makeSourceId(reordered));
+    assert.match(makeSourceId(first), /^[a-f0-9]{64}$/);
+  },
+);
 
 test('parseGoogleTimestamp respects explicit ISO time zones', () => {
   assert.equal(
@@ -40,7 +43,9 @@ test('parseGoogleTimestamp respects explicit ISO time zones', () => {
   );
 });
 
-test('parseGoogleTimestamp interprets ambiguous dates as India day-first IST', () => {
+test(
+  'parseGoogleTimestamp interprets ambiguous dates as India day-first IST',
+  () => {
   assert.equal(
     parseGoogleTimestamp('04/11/2026, 11:59 PM'),
     '2026-11-04T18:29:00.000Z',
@@ -49,7 +54,8 @@ test('parseGoogleTimestamp interprets ambiguous dates as India day-first IST', (
     parseGoogleTimestamp('04/11/2026, 12:00 AM'),
     '2026-11-03T18:30:00.000Z',
   );
-});
+  },
+);
 
 test('parseGoogleTimestamp rejects malformed and impossible dates', () => {
   assert.equal(parseGoogleTimestamp(''), null);
