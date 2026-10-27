@@ -1,11 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {
-  emailAllowed,
-  friendlyError,
-  normaliseUrl,
-  safeNext,
-} from '../lib/portal.ts';
+import { emailAllowed, friendlyError, normaliseUrl, safeNext } from '../lib/portal.ts';
 
 test('safeNext rejects external and malformed redirects', () => {
   assert.equal(safeNext('/account'), '/account');
