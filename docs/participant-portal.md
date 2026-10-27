@@ -35,28 +35,35 @@ Limits**: raise "emails sent per hour" to match (300+ for launch day).
 
 **Authentication > URL Configuration**
 
-- Site URL: `https://project-ananta-zvut.vercel.app` (or the final domain)
+- Site URL: `https://project-ananta-zvut.vercel.app` (or the final custom domain)
 - Redirect URLs: add `https://project-ananta-zvut.vercel.app/auth/confirm` and
-  `http://localhost:3000/auth/confirm`
+  `http://localhost:3000/auth/confirm`. Add the callback for any other exact
+  domain you actually use; do not allow arbitrary preview domains for production
+  authentication.
 
-**Authentication > Emails > Templates**: so links work when opened on a
-different device from the one that signed up (common: sign up on a laptop, open
-mail on a phone), configure these three templates:
+**Authentication > Emails > Templates**: set each link to use Supabase's
+`{{ .RedirectTo }}` variable. The app passes a callback URL that already
+contains the safe `next` path, so append the token hash and email type using
+`&amp;` separators in the HTML link.
 
 - Confirm signup:
-  `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/register/form`
+  `<a href="{{ .RedirectTo }}&amp;token_hash={{ .TokenHash }}&amp;type=email">Confirm email address</a>`
 - Reset password:
-  `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/account/password`
+  `<a href="{{ .RedirectTo }}&amp;token_hash={{ .TokenHash }}&amp;type=recovery">Reset password</a>`
 - Invite user:
-  `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=invite&next=/account/password`
+  `<a href="{{ .RedirectTo }}&amp;token_hash={{ .TokenHash }}&amp;type=invite">Accept invitation</a>`
 
-In each template, use the URL above as the link target (for example,
-`<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=invite&next=/account/password">Accept invitation</a>`).
-For **Invite user**, use the custom `token_hash` URL instead of
-`{{ .ConfirmationURL }}`; the callback must receive `token_hash` and `type=invite`
-to establish the session server-side before showing the password form. The
-invitation API uses the canonical Site URL and redirects to
-`/auth/confirm?next=/account/password`.
+For these templates, replace the link that uses `{{ .ConfirmationURL }}` with
+the matching link above. `/auth/confirm` verifies `token_hash` and `type`
+server-side, then redirects only to a safe relative `next` path. For invitations,
+the API sets `next=/account/password`; for signup it uses the intended next path,
+normally `/register/form`.
+
+Save each template and keep its existing subject/body copy as appropriate.
+Test with a controlled email address before sending invitations to organisers
+or announcing registration. Supabase documents the `RedirectTo` template variable
+and token-hash flow in its [email template guide](https://supabase.com/docs/guides/auth/auth-email-templates)
+and [redirect URL guide](https://supabase.com/docs/guides/auth/redirect-urls).
 
 Make sure the production callback and local callback are in Supabase's redirect
 allow-list. Default PKCE links may only complete in the browser that started the flow.
