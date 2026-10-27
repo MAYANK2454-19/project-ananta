@@ -18,18 +18,9 @@ test('safeNext rejects external and malformed redirects', () => {
 });
 
 test('normaliseUrl upgrades profile URLs to HTTPS', () => {
-  assert.equal(
-    normaliseUrl(' github.com/mayank '),
-    'https://github.com/mayank',
-  );
-  assert.equal(
-    normaliseUrl('http://github.com/mayank'),
-    'https://github.com/mayank',
-  );
-  assert.equal(
-    normaliseUrl('https://github.com/mayank'),
-    'https://github.com/mayank',
-  );
+  assert.equal(normaliseUrl(' github.com/mayank '), 'https://github.com/mayank');
+  assert.equal(normaliseUrl('http://github.com/mayank'), 'https://github.com/mayank');
+  assert.equal(normaliseUrl('https://github.com/mayank'), 'https://github.com/mayank');
   assert.equal(normaliseUrl(''), '');
 });
 
@@ -53,8 +44,5 @@ test('friendlyError maps common auth errors to actionable messages', () => {
     friendlyError({ message: 'Failed to fetch' }),
     'Could not reach the server. Check your connection and try again.',
   );
-  assert.equal(
-    friendlyError({ message: 'unexpected issue' }),
-    'unexpected issue',
-  );
+  assert.equal(friendlyError({ message: 'unexpected issue' }), 'unexpected issue');
 });
