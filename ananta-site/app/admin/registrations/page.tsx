@@ -324,12 +324,21 @@ export default function RegistrationsPage() {
         error?: string;
         imported?: number;
         duplicatesSkipped?: number;
+        rowsNotImported?: number;
         auditLogged?: boolean;
         warning?: string;
       };
 
       if (!response.ok) {
-        throw new Error(result.error ?? 'Registration import failed.');
+        const partialProgress =
+          typeof result.imported === 'number'
+            ? ` ${result.imported} rows were imported before the failure. ` +
+              `${result.duplicatesSkipped ?? 0} duplicates were skipped; ` +
+              `${result.rowsNotImported ?? 0} new rows remain. Retrying the same CSV is safe.`
+            : '';
+        throw new Error(
+          `${result.error ?? 'Registration import failed.'}${partialProgress}`,
+        );
       }
 
       setNotice({
