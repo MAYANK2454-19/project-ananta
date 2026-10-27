@@ -83,12 +83,10 @@ export default function UsersAdmin() {
   async function invite(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const target = inviteEmail.trim().toLowerCase();
-    if (
-      inviteRole === 'super_admin' &&
-      !window.confirm(
-        `Give ${target} full super-admin access, including organiser management? Only invite someone you trust.`,
-      )
-    ) {
+    const confirmMessage =
+      `Give ${target} full super-admin access, including organiser management? ` +
+      'Only invite someone you trust.';
+    if (inviteRole === 'super_admin' && !window.confirm(confirmMessage)) {
       return;
     }
 
@@ -112,15 +110,15 @@ export default function UsersAdmin() {
         throw new Error(result.error ?? 'Could not invite the organiser.');
       }
 
+      const invitedEmail = result.email ?? target;
+      const invitedRole = result.role ?? inviteRole;
+      const invitationMessage =
+        `Invitation sent to ${invitedEmail} with the ${ROLE_LABEL[invitedRole]} role.`;
+
       setInviteEmail('');
       setNotice({
         kind: result.auditLogged === false ? 'error' : 'success',
-        text: [
-          `Invitation sent to ${result.email ?? target} with the ${ROLE_LABEL[result.role ?? inviteRole]} role.`,
-          result.warning,
-        ]
-          .filter(Boolean)
-          .join(' '),
+        text: [invitationMessage, result.warning].filter(Boolean).join(' '),
       });
       await load();
     } catch (error) {
@@ -267,14 +265,15 @@ export default function UsersAdmin() {
                           value={u.role}
                           disabled={busy || self}
                           aria-label={`Role for ${u.email}`}
-                          onChange={(e) =>
+                          onChange={(e) => {
+                            const nextRole = e.target.value as AdminRole;
                             void setUser(
                               u.email,
-                              e.target.value as AdminRole,
+                              nextRole,
                               u.is_active,
-                              `${u.email} is now ${ROLE_LABEL[e.target.value as AdminRole]}.`,
-                            )
-                          }
+                              `${u.email} is now ${ROLE_LABEL[nextRole]}.`,
+                            );
+                          }}
                         >
                           {ADMIN_ROLES.map((r) => (
                             <option key={r} value={r}>
@@ -297,14 +296,15 @@ export default function UsersAdmin() {
                             type="button"
                             className={u.is_active ? styles.danger : styles.ghost}
                             disabled={busy}
-                            onClick={() =>
+                            onClick={() => {
+                              const action = u.is_active ? 'deactivated' : 'reactivated';
                               void setUser(
                                 u.email,
                                 u.role,
                                 !u.is_active,
-                                `${u.email} ${u.is_active ? 'deactivated' : 'reactivated'}.`,
-                              )
-                            }
+                                `${u.email} ${action}.`,
+                              );
+                            }}
                           >
                             {u.is_active ? 'Deactivate' : 'Reactivate'}
                           </button>
