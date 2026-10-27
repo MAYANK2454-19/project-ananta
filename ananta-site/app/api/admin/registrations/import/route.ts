@@ -45,17 +45,38 @@ type ImportAuditSummary = {
   error_code?: string;
 };
 
+type AuditLogInsert = {
+  actor_id: string;
+  actor_email: string | null;
+  table_name: 'registration_imports';
+  row_key: string;
+  action: 'INSERT';
+  old_data: null;
+  new_data: Record<string, unknown>;
+};
+
+type AuditLogWriter = {
+  from: (table: 'audit_log') => {
+    insert: (
+      values: AuditLogInsert,
+    ) => PromiseLike<{ error: { message: string } | null }>;
+  };
+};
+
 /**
  * Record aggregate import activity without copying participant data into the
  * audit log. The privileged client is created only after the caller's role
  * has been verified by the route.
  */
 async function writeImportAudit(
-  adminClient: ReturnType<typeof createSupabaseClient<any>>,
+  adminClient: ReturnType<typeof createSupabaseClient>,
   actor: { id: string; email?: string },
   summary: ImportAuditSummary,
 ): Promise<boolean> {
-  const { error } = await adminClient.from('audit_log').insert({
+  // Supabase's client has no generated database schema types in this repo.
+  // Narrow only this insert to the columns we intentionally write.
+  const auditClient = adminClient as unknown as AuditLogWriter;
+  const { error } = await auditClient.from('audit_log').insert({
     actor_id: actor.id,
     actor_email: actor.email ?? null,
     table_name: 'registration_imports',
