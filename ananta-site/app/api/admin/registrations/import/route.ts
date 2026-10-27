@@ -69,7 +69,7 @@ type AuditLogWriter = {
  * has been verified by the route.
  */
 async function writeImportAudit(
-  adminClient: ReturnType<typeof createSupabaseClient>,
+  adminClient: unknown,
   actor: { id: string; email?: string },
   summary: ImportAuditSummary,
 ): Promise<boolean> {
