@@ -8,6 +8,7 @@ import {
   makeSourceId,
   normaliseHeader,
   parseGoogleTimestamp,
+  summariseImportProgress,
   type CsvRow,
 } from '@/lib/registration-import';
 
@@ -42,6 +43,7 @@ type ImportAuditSummary = {
   unique_rows: number;
   imported: number;
   duplicates_skipped: number;
+  rows_not_imported: number;
   error_code?: string;
 };
 
@@ -380,12 +382,20 @@ export async function POST(request: Request) {
         imported,
       });
 
+      const progress = summariseImportProgress(
+        records.length,
+        uniqueRows.length,
+        existingIds.size,
+        imported,
+        newRows.length,
+      );
       const auditLogged = await writeImportAudit(adminClient, user, {
         outcome: 'partial_failure',
         rows_received: records.length,
         unique_rows: uniqueRows.length,
         imported,
-        duplicates_skipped: records.length - imported,
+        duplicates_skipped: progress.duplicatesSkipped,
+        rows_not_imported: progress.rowsNotImported,
         error_code: error.code,
       });
 
@@ -395,6 +405,10 @@ export async function POST(request: Request) {
             `Import stopped after ${imported} rows. ` +
             'Review the database error in server logs, then retry the same CSV.',
           imported,
+          rowsReceived: records.length,
+          uniqueRows: uniqueRows.length,
+          duplicatesSkipped: progress.duplicatesSkipped,
+          rowsNotImported: progress.rowsNotImported,
           auditLogged,
         },
         { status: 500 },
@@ -404,11 +418,19 @@ export async function POST(request: Request) {
     imported += batch.length;
   }
 
+  const progress = summariseImportProgress(
+    records.length,
+    uniqueRows.length,
+    existingIds.size,
+    imported,
+    newRows.length,
+  );
   const result = {
     rowsReceived: records.length,
     uniqueRows: uniqueRows.length,
     imported,
-    duplicatesSkipped: records.length - imported,
+    duplicatesSkipped: progress.duplicatesSkipped,
+    rowsNotImported: progress.rowsNotImported,
   };
 
   const auditLogged = await writeImportAudit(adminClient, user, {
@@ -417,6 +439,7 @@ export async function POST(request: Request) {
     unique_rows: result.uniqueRows,
     imported: result.imported,
     duplicates_skipped: result.duplicatesSkipped,
+    rows_not_imported: result.rowsNotImported,
   });
 
   return NextResponse.json({

@@ -95,6 +95,34 @@ export function parseGoogleTimestamp(value?: string): string | null {
   return new Date(wallClock.getTime() - indiaOffsetMinutes * 60_000).toISOString();
 }
 
+/**
+ * Split import progress into true duplicates and new rows still awaiting import.
+ * Duplicate counts include repeated rows in this CSV and responses already in DB.
+ */
+export function summariseImportProgress(
+  rowsReceived: number,
+  uniqueRows: number,
+  existingRows: number,
+  imported: number,
+  newRows: number,
+): { duplicatesSkipped: number; rowsNotImported: number } {
+  const values = [rowsReceived, uniqueRows, existingRows, imported, newRows];
+  if (
+    values.some((value) => !Number.isSafeInteger(value) || value < 0) ||
+    uniqueRows > rowsReceived ||
+    existingRows > uniqueRows ||
+    newRows !== uniqueRows - existingRows ||
+    imported > newRows
+  ) {
+    throw new RangeError('Invalid CSV import progress counts.');
+  }
+
+  return {
+    duplicatesSkipped: rowsReceived - uniqueRows + existingRows,
+    rowsNotImported: newRows - imported,
+  };
+}
+
 /** Stable across CSV column ordering and repeat exports with the same values. */
 export function makeSourceId(row: CsvRow): string {
   const canonical = Object.entries(row)
