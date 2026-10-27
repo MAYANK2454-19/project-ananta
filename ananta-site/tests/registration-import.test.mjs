@@ -25,8 +25,14 @@ test('findHeader matches normalized headings and aliases', () => {
 });
 
 test('makeSourceId is stable across column order and whitespace', () => {
-  const first = { 'Full Name': ' Mayank ', 'Email Address': 'mayank@smvdu.ac.in' };
-  const reordered = { 'Email Address': 'mayank@smvdu.ac.in', 'Full Name': 'Mayank' };
+  const first = {
+    'Full Name': ' Mayank ',
+    'Email Address': 'mayank@smvdu.ac.in',
+  };
+  const reordered = {
+    'Email Address': 'mayank@smvdu.ac.in',
+    'Full Name': 'Mayank',
+  };
   assert.equal(makeSourceId(first), makeSourceId(reordered));
   assert.match(makeSourceId(first), /^[a-f0-9]{64}$/);
 });
@@ -38,10 +44,19 @@ test('parseGoogleTimestamp respects explicit ISO time zones', () => {
   );
 });
 
-test('parseGoogleTimestamp interprets ambiguous dates as India day-first IST', () => {
-  assert.equal(parseGoogleTimestamp('04/11/2026, 11:59 PM'), '2026-11-04T18:29:00.000Z');
-  assert.equal(parseGoogleTimestamp('04/11/2026, 12:00 AM'), '2026-11-03T18:30:00.000Z');
-});
+test(
+  'parseGoogleTimestamp interprets ambiguous dates as India day-first IST',
+  () => {
+    assert.equal(
+      parseGoogleTimestamp('04/11/2026, 11:59 PM'),
+      '2026-11-04T18:29:00.000Z',
+    );
+    assert.equal(
+      parseGoogleTimestamp('04/11/2026, 12:00 AM'),
+      '2026-11-03T18:30:00.000Z',
+    );
+  },
+);
 
 test('parseGoogleTimestamp rejects malformed and impossible dates', () => {
   assert.equal(parseGoogleTimestamp(''), null);
@@ -52,23 +67,17 @@ test('parseGoogleTimestamp rejects malformed and impossible dates', () => {
 });
 
 test('summariseImportProgress separates duplicates from rows awaiting retry', () => {
-  assert.deepEqual(
-    summariseImportProgress(400, 340, 60, 100, 280),
-    { duplicatesSkipped: 120, rowsNotImported: 180 },
-  );
-  assert.deepEqual(
-    summariseImportProgress(400, 340, 60, 280, 280),
-    { duplicatesSkipped: 120, rowsNotImported: 0 },
-  );
+  assert.deepEqual(summariseImportProgress(400, 340, 60, 100, 280), {
+    duplicatesSkipped: 120,
+    rowsNotImported: 180,
+  });
+  assert.deepEqual(summariseImportProgress(400, 340, 60, 280, 280), {
+    duplicatesSkipped: 120,
+    rowsNotImported: 0,
+  });
 });
 
 test('summariseImportProgress rejects inconsistent counts', () => {
-  assert.throws(
-    () => summariseImportProgress(10, 9, 3, 0, 9),
-    RangeError,
-  );
-  assert.throws(
-    () => summariseImportProgress(10, 11, 0, 0, 11),
-    RangeError,
-  );
+  assert.throws(() => summariseImportProgress(10, 9, 3, 0, 9), RangeError);
+  assert.throws(() => summariseImportProgress(10, 11, 0, 0, 11), RangeError);
 });
