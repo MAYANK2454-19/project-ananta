@@ -108,9 +108,9 @@
 }
 
 .input,
-.field input:not([type='checkbox']):not([type='radio']):not([type='file']),
-.field select,
-.field textarea {
+.field > input,
+.field > select,
+.field > textarea {
   width: 100%;
   padding: var(--s-3) var(--s-4);
   background: var(--c-paper);
@@ -127,9 +127,9 @@
   line-height: 1.5;
 }
 
-.field input:not([type='checkbox']):not([type='radio']):not([type='file']):focus,
-.field select:focus,
-.field textarea:focus {
+.field > input:focus,
+.field > select:focus,
+.field > textarea:focus {
   border-color: var(--c-ink);
 }
 
