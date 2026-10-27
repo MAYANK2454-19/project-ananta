@@ -98,9 +98,10 @@ export async function POST(request: Request) {
 
   // Use the configured canonical site URL so invite links do not depend on an
   // arbitrary Vercel preview hostname. It must be present in Supabase's redirect allow-list.
-  const siteUrl = (
-    process.env.NEXT_PUBLIC_SITE_URL?.trim() || FALLBACK_SITE_URL
-  ).replace(/\/$/, '');
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || FALLBACK_SITE_URL).replace(
+    /\/$/,
+    '',
+  );
 
   const callbackUrl = new URL('/auth/confirm', siteUrl);
   callbackUrl.searchParams.set('next', '/account/password');
