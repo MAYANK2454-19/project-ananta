@@ -189,11 +189,13 @@ export function RegistrationForm({
           .toLowerCase()
           .replace(/[^a-z]/g, '');
         cvPath = `${userId}/cv-${Date.now()}.${ext || 'pdf'}`;
+        // Track the path before the request: an upload can commit even if the
+        // browser loses the response.
+        uploadedCvPath = cvPath;
         const { error: uploadError } = await supabase.storage
           .from('cvs')
           .upload(cvPath, cvFile, { contentType: cvFile.type, upsert: false });
         if (uploadError) throw uploadError;
-        uploadedCvPath = cvPath;
       }
 
       const { data, error } = await supabase.rpc('submit_registration', {
@@ -232,30 +234,62 @@ export function RegistrationForm({
       top.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (err) {
       let cleanupMessage = '';
+      let registrationRecovered = false;
+
       if (uploadedCvPath) {
+        // The request may time out after the database committed. Verify the
+        // stored registration before deleting a file that might now be in use.
         try {
-          const { error: cleanupError } = await supabase.storage
-            .from('cvs')
-            .remove([uploadedCvPath]);
-          if (cleanupError) {
+          const { data: currentRegistration, error: verifyError } =
+            await supabase.rpc('my_registration');
+
+          if (verifyError) {
             console.error(
-              'Could not remove an unreferenced CV upload:',
-              cleanupError.message,
+              'Could not verify a CV upload after a failed save:',
+              verifyError.message,
             );
             cleanupMessage =
-              ' The uploaded CV could not be cleaned up automatically; ' +
-              'contact the organisers if this repeats.';
+              ' We could not verify whether the CV was saved, so its file was left ' +
+              'in place to avoid breaking a saved entry. Reload before retrying.';
+          } else if (
+            (currentRegistration as MyRegistration | null)?.cv_path === uploadedCvPath
+          ) {
+            const recovered = currentRegistration as MyRegistration;
+            setSaved(recovered);
+            setForm(fromSaved(recovered));
+            setCvFile(null);
+            setEditing(false);
+            setJustSaved(true);
+            setError('');
+            registrationRecovered = true;
+          } else {
+            const { error: cleanupError } = await supabase.storage
+              .from('cvs')
+              .remove([uploadedCvPath]);
+
+            if (cleanupError) {
+              console.error(
+                'Could not remove an unreferenced CV upload:',
+                cleanupError.message,
+              );
+              cleanupMessage =
+                ' The uploaded CV could not be cleaned up automatically; ' +
+                'contact the organisers if this repeats.';
+            }
           }
         } catch (cleanupError) {
-          console.error('Could not remove an unreferenced CV upload:', cleanupError);
+          console.error('Could not verify or clean up a CV upload:', cleanupError);
           cleanupMessage =
-            ' The uploaded CV could not be cleaned up automatically; ' +
-            'contact the organisers if this repeats.';
+            ' We could not verify whether the CV was saved, so its file was left ' +
+            'in place to avoid breaking a saved entry. Reload before retrying.';
         }
       }
-      setError(
-        `${friendlyError(err, 'Could not save your registration.')}${cleanupMessage}`,
-      );
+
+      if (!registrationRecovered) {
+        setError(
+          `${friendlyError(err, 'Could not save your registration.')}${cleanupMessage}`,
+        );
+      }
     } finally {
       setSaving(false);
     }
@@ -271,8 +305,8 @@ export function RegistrationForm({
     <div ref={top}>
       {justSaved && (
         <p className={styles.success} role="status">
-          You are registered. Teams are formed by the organisers; you will see yours on
-          your account page once it is announced.
+          Your registration is saved. Teams are formed by the organisers; you will see
+          yours on your account page once it is announced.
         </p>
       )}
 
