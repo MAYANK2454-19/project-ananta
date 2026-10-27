@@ -14,7 +14,10 @@ test('normaliseHeader removes accents, punctuation and case', () => {
 
 test('findHeader resolves aliases against normalized Google Forms headings', () => {
   assert.equal(
-    findHeader(['Timestamp', 'Student Name', 'Email Address'], ['full name', 'student name']),
+    findHeader(
+      ['Timestamp', 'Student Name', 'Email Address'],
+      ['full name', 'student name'],
+    ),
     'Student Name',
   );
   assert.equal(findHeader(['Timestamp'], ['Email Address']), undefined);
@@ -22,7 +25,10 @@ test('findHeader resolves aliases against normalized Google Forms headings', () 
 
 test('makeSourceId is stable across column order and surrounding whitespace', () => {
   const first = { 'Full Name': ' Mayank ', 'Email Address': 'mayank@smvdu.ac.in' };
-  const reordered = { 'Email Address': 'mayank@smvdu.ac.in', 'Full Name': 'Mayank' };
+  const reordered = {
+    'Email Address': 'mayank@smvdu.ac.in',
+    'Full Name': 'Mayank',
+  };
   assert.equal(makeSourceId(first), makeSourceId(reordered));
   assert.match(makeSourceId(first), /^[a-f0-9]{64}$/);
 });
