@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createClient } from '@/lib/supabase';
 import {
   CONSENT,
+  CV_TYPES,
   validateCvUpload,
   EXPERIENCE,
   SKILLS,
@@ -15,6 +16,8 @@ import {
   type RegistrationForm as Form,
 } from '@/lib/portal';
 import styles from './Portal.module.css';
+
+const CV_ACCEPT = ['.pdf', '.doc', '.docx', ...CV_TYPES].join(',');
 
 const EMPTY: Form = {
   full_name: '',
@@ -235,14 +238,19 @@ export function RegistrationForm({
             .from('cvs')
             .remove([uploadedCvPath]);
           if (cleanupError) {
-            console.error('Could not remove an unreferenced CV upload:', cleanupError.message);
+            console.error(
+              'Could not remove an unreferenced CV upload:',
+              cleanupError.message,
+            );
             cleanupMessage =
-              ' The uploaded CV could not be cleaned up automatically; contact the organisers if this repeats.';
+              ' The uploaded CV could not be cleaned up automatically; ' +
+              'contact the organisers if this repeats.';
           }
         } catch (cleanupError) {
           console.error('Could not remove an unreferenced CV upload:', cleanupError);
           cleanupMessage =
-            ' The uploaded CV could not be cleaned up automatically; contact the organisers if this repeats.';
+            ' The uploaded CV could not be cleaned up automatically; ' +
+            'contact the organisers if this repeats.';
         }
       }
       setError(
@@ -541,7 +549,7 @@ export function RegistrationForm({
                   <input
                     className={styles.visuallyHiddenInput}
                     type="file"
-                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    accept={CV_ACCEPT}
                     onChange={(e) => pickCv(e.target.files?.[0])}
                   />
                 </label>
