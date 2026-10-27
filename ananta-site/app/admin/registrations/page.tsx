@@ -324,6 +324,8 @@ export default function RegistrationsPage() {
         error?: string;
         imported?: number;
         duplicates?: number;
+        auditLogged?: boolean;
+        warning?: string;
       };
 
       if (!response.ok) {
@@ -331,10 +333,15 @@ export default function RegistrationsPage() {
       }
 
       setNotice({
-        kind: 'success',
-        text: `Import complete: ${result.imported ?? 0} new rows added; ${
-          result.duplicates ?? 0
-        } duplicate rows skipped.`,
+        kind: result.auditLogged === false ? 'error' : 'success',
+        text: [
+          `Import complete: ${result.imported ?? 0} new rows added; ${
+            result.duplicates ?? 0
+          } duplicate rows skipped.`,
+          result.warning,
+        ]
+          .filter(Boolean)
+          .join(' '),
       });
 
       await loadRegistrations();
