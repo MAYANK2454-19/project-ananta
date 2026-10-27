@@ -51,10 +51,7 @@ export async function POST(request: Request) {
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
   const targetRole = body.role;
 
-  if (
-    email.length > 254 ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  ) {
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return jsonError('Enter a valid organiser email address.', 400);
   }
 
@@ -85,7 +82,10 @@ export async function POST(request: Request) {
     .maybeSingle();
 
   if (lookupError) {
-    console.error('Could not check organiser account before invite:', lookupError.message);
+    console.error(
+      'Could not check organiser account before invite:',
+      lookupError.message,
+    );
     return jsonError('Could not check existing organiser accounts.', 500);
   }
 
@@ -102,7 +102,9 @@ export async function POST(request: Request) {
     process.env.NEXT_PUBLIC_SITE_URL?.trim() || FALLBACK_SITE_URL
   ).replace(/\/$/, '');
 
-  const redirectTo = `${siteUrl}/auth/confirm?next=${encodeURIComponent('/account/password')}`;
+  const callbackUrl = new URL('/auth/confirm', siteUrl);
+  callbackUrl.searchParams.set('next', '/account/password');
+  const redirectTo = callbackUrl.toString();
   const { data: inviteData, error: inviteError } =
     await adminClient.auth.admin.inviteUserByEmail(email, {
       redirectTo,
@@ -117,7 +119,10 @@ export async function POST(request: Request) {
       );
     }
     console.error('Supabase organiser invitation failed:', message);
-    return jsonError('The invitation email could not be sent. Check Auth email delivery settings.', 502);
+    return jsonError(
+      'The invitation email could not be sent. Check Auth email delivery settings.',
+      502,
+    );
   }
 
   // Assign the role through the database function using the verified caller's
@@ -139,7 +144,10 @@ export async function POST(request: Request) {
       });
     }
 
-    console.error('Could not assign role after organiser invite:', assignmentError.message);
+    console.error(
+      'Could not assign role after organiser invite:',
+      assignmentError.message,
+    );
     return jsonError(
       cleanupError
         ? 'The invite was sent, but role assignment and cleanup both failed. Contact a super admin before resending.'
@@ -165,7 +173,10 @@ export async function POST(request: Request) {
   });
 
   if (auditError) {
-    console.error('Could not write organiser-invitation audit entry:', auditError.message);
+    console.error(
+      'Could not write organiser-invitation audit entry:',
+      auditError.message,
+    );
   }
 
   return NextResponse.json({
