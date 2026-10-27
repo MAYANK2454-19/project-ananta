@@ -41,14 +41,25 @@ Limits**: raise "emails sent per hour" to match (300+ for launch day).
 
 **Authentication > Emails > Templates**: so links work when opened on a
 different device from the one that signed up (common: sign up on a laptop, open
-mail on a phone), change the link in two templates:
+mail on a phone), configure these three templates:
 
 - Confirm signup:
   `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/register/form`
 - Reset password:
   `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/account/password`
+- Invite user:
+  `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=invite&next=/account/password`
 
-The default links also work, but only in the browser that asked for them.
+In each template, use the URL above as the link target (for example,
+`<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=invite&next=/account/password">Accept invitation</a>`).
+For **Invite user**, use the custom `token_hash` URL instead of
+`{{ .ConfirmationURL }}`; the callback must receive `token_hash` and `type=invite`
+to establish the session server-side before showing the password form. The
+invitation API uses the canonical Site URL and redirects to
+`/auth/confirm?next=/account/password`.
+
+Make sure the production callback and local callback are in Supabase's redirect
+allow-list. Default PKCE links may only complete in the browser that started the flow.
 
 ## 4. Optional: refuse non-university sign-ups at the source
 
