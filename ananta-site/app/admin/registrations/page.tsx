@@ -323,7 +323,7 @@ export default function RegistrationsPage() {
       const result = (await response.json()) as {
         error?: string;
         imported?: number;
-        duplicates?: number;
+        duplicatesSkipped?: number;
         auditLogged?: boolean;
         warning?: string;
       };
@@ -336,7 +336,7 @@ export default function RegistrationsPage() {
         kind: result.auditLogged === false ? 'error' : 'success',
         text: [
           `Import complete: ${result.imported ?? 0} new rows added; ${
-            result.duplicates ?? 0
+            result.duplicatesSkipped ?? 0
           } duplicate rows skipped.`,
           result.warning,
         ]
