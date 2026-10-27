@@ -34,16 +34,6 @@ jobs:
 
       - run: npm ci
 
-      - name: Temporary canonical formatter output
-        run: |
-          npx prettier --write app/admin/users/page.tsx app/api/admin/users/invite/route.ts
-          echo "PRETTIER_PAGE_BEGIN"
-          cat app/admin/users/page.tsx
-          echo "PRETTIER_PAGE_END"
-          echo "PRETTIER_ROUTE_BEGIN"
-          cat app/api/admin/users/invite/route.ts
-          echo "PRETTIER_ROUTE_END"
-
       - name: Prettier
         run: npm run format:check
         env:
