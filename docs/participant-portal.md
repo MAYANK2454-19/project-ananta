@@ -60,8 +60,19 @@ on other domains need that domain added to the allowed list first.
 
 ## 5. Vercel
 
-No new environment variables. `NEXT_PUBLIC_SUPABASE_URL` and
-`NEXT_PUBLIC_SUPABASE_ANON_KEY` are already set. Redeploy after the merge.
+- `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are required in
+  production and preview.
+- `SUPABASE_SERVICE_ROLE_KEY` is required by the server-only Google Forms CSV
+  import endpoint. It must never be prefixed with `NEXT_PUBLIC_`, read from a
+  client component, or printed in logs. Keep it in production only unless a
+  preview is deliberately connected to an isolated test Supabase project.
+- `ADMIN_EMAILS` is a legacy setting and is not used by the current RBAC
+  middleware. Access comes from active rows in `public.admin_users`.
+- Set the final public origin consistently in Supabase Auth URL Configuration.
+  Redirect URLs must allow the production `/auth/confirm` route and the local
+  development route used for testing.
+
+Redeploy after configuration or code changes.
 
 ## How load is handled
 

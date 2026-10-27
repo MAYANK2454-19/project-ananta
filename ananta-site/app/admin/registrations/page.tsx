@@ -323,7 +323,9 @@ export default function RegistrationsPage() {
       const result = (await response.json()) as {
         error?: string;
         imported?: number;
-        duplicates?: number;
+        duplicatesSkipped?: number;
+        auditLogged?: boolean;
+        warning?: string;
       };
 
       if (!response.ok) {
@@ -331,10 +333,15 @@ export default function RegistrationsPage() {
       }
 
       setNotice({
-        kind: 'success',
-        text: `Import complete: ${result.imported ?? 0} new rows added; ${
-          result.duplicates ?? 0
-        } duplicate rows skipped.`,
+        kind: result.auditLogged === false ? 'error' : 'success',
+        text: [
+          `Import complete: ${result.imported ?? 0} new rows added; ${
+            result.duplicatesSkipped ?? 0
+          } duplicate rows skipped.`,
+          result.warning,
+        ]
+          .filter(Boolean)
+          .join(' '),
       });
 
       await loadRegistrations();
