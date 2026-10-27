@@ -133,6 +133,46 @@ function jsonError(message: string, status: number) {
   return NextResponse.json({ error: message }, { status });
 }
 
+type ImportAuditSummary = {
+  outcome: 'complete' | 'partial_failure';
+  rows_received: number;
+  unique_rows: number;
+  imported: number;
+  duplicates_skipped: number;
+  error_code?: string;
+};
+
+/**
+ * Record aggregate import activity without copying participant data into the
+ * audit log. The privileged client is created only after the caller's role
+ * has been verified by the route.
+ */
+async function writeImportAudit(
+  adminClient: ReturnType<typeof createSupabaseClient>,
+  actor: { id: string; email?: string },
+  summary: ImportAuditSummary,
+): Promise<boolean> {
+  const { error } = await adminClient.from('audit_log').insert({
+    actor_id: actor.id,
+    actor_email: actor.email ?? null,
+    table_name: 'registration_imports',
+    row_key: new Date().toISOString(),
+    action: 'INSERT',
+    old_data: null,
+    new_data: {
+      source: 'google_forms_csv',
+      ...summary,
+    },
+  });
+
+  if (error) {
+    console.error('Could not write registration import audit entry:', error.message);
+    return false;
+  }
+
+  return true;
+}
+
 export async function POST(request: Request) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -416,12 +456,22 @@ export async function POST(request: Request) {
         imported,
       });
 
+      const auditLogged = await writeImportAudit(adminClient, user, {
+        outcome: 'partial_failure',
+        rows_received: records.length,
+        unique_rows: uniqueRows.length,
+        imported,
+        duplicates_skipped: records.length - imported,
+        error_code: error.code,
+      });
+
       return NextResponse.json(
         {
           error:
             `Import stopped after ${imported} rows. ` +
             'Review the database error in server logs, then retry the same CSV.',
           imported,
+          auditLogged,
         },
         { status: 500 },
       );
@@ -430,10 +480,29 @@ export async function POST(request: Request) {
     imported += batch.length;
   }
 
-  return NextResponse.json({
+  const result = {
     rowsReceived: records.length,
     uniqueRows: uniqueRows.length,
     imported,
     duplicatesSkipped: records.length - imported,
+  };
+
+  const auditLogged = await writeImportAudit(adminClient, user, {
+    outcome: 'complete',
+    rows_received: result.rowsReceived,
+    unique_rows: result.uniqueRows,
+    imported: result.imported,
+    duplicates_skipped: result.duplicatesSkipped,
+  });
+
+  return NextResponse.json({
+    ...result,
+    auditLogged,
+    ...(auditLogged
+      ? {}
+      : {
+          warning:
+            'The import succeeded, but its audit entry could not be recorded. Contact a super admin and do not re-import solely to address this warning.',
+        }),
   });
 }
