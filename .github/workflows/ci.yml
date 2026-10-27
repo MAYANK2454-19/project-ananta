@@ -34,13 +34,6 @@ jobs:
 
       - run: npm ci
 
-      - name: Temporary Prettier output
-        run: |
-          npx prettier --write tests/registration-import.test.mjs
-          echo "CSV_IMPORT_TEST_BEGIN"
-          cat tests/registration-import.test.mjs
-          echo "CSV_IMPORT_TEST_END"
-
       - name: Prettier
         run: npm run format:check
         env:
