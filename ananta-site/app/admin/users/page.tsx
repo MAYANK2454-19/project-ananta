@@ -112,8 +112,7 @@ export default function UsersAdmin() {
 
       const invitedEmail = result.email ?? target;
       const invitedRole = result.role ?? inviteRole;
-      const invitationMessage =
-        `Invitation sent to ${invitedEmail} with the ${ROLE_LABEL[invitedRole]} role.`;
+      const invitationMessage = `Invitation sent to ${invitedEmail} with the ${ROLE_LABEL[invitedRole]} role.`;
 
       setInviteEmail('');
       setNotice({
@@ -160,9 +159,8 @@ export default function UsersAdmin() {
         <h2 className={styles.cardTitle}>Invite a new organiser</h2>
         <p className={styles.muted}>
           Sends a time-limited invitation email. The recipient sets a password before
-          signing in. The Supabase “Invite user” email template must link to
-          /auth/confirm with token_hash and type=invite; see the participant-portal
-          setup guide.
+          signing in. The Supabase “Invite user” email template must link to /auth/confirm
+          with token_hash and type=invite; see the participant-portal setup guide.
         </p>
         <div className={`${styles.grid} ${styles.grid3}`}>
           <label className={styles.field}>
