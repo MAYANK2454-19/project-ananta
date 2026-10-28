@@ -81,7 +81,7 @@ export function SiteNav() {
           className={`${styles.links} ${open ? styles.open : ''}`}
           aria-label="Main"
         >
-          {LINKS.map(({ href, label }) => {
+          {VISIBLE_LINKS.map(({ href, label }) => {
             const current = pathname === href;
             return (
               <Link
