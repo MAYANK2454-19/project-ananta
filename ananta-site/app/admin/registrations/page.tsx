@@ -369,7 +369,6 @@ export default function RegistrationsPage() {
       <div className={styles.container}>
         <header className={styles.header}>
           <div>
-            <p className={styles.kicker}>ANANTA / Admin</p>
             <h1>
               Registrations<span>.</span>
             </h1>

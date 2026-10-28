@@ -233,7 +233,6 @@ export default function JudgingAdmin() {
     <section className={styles.page}>
       <header className={styles.head}>
         <div>
-          <p className={`meta ${styles.kicker}`}>ANANTA / Admin</p>
           <h1 className={styles.title}>
             Judging <em>desk.</em>
           </h1>

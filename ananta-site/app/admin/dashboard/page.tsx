@@ -54,7 +54,6 @@ export default function Dashboard() {
     <section className={styles.page}>
       <header className={styles.head}>
         <div>
-          <p className={`meta ${styles.kicker}`}>ANANTA / Admin</p>
           <h1 className={styles.title}>
             Control <em>room.</em>
           </h1>

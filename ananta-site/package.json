@@ -25,17 +25,16 @@
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.57.0",
+    "@vercel/analytics": "^2.0.1",
     "csv-parse": "^7.0.3",
     "next": "^15.5.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "three": "^0.186.1"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
-    "@types/three": "^0.186.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "^15.5.28",
     "eslint-config-prettier": "^10.1.8",
