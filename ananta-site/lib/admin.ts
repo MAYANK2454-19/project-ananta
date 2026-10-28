@@ -63,6 +63,12 @@ export const ADMIN_NAV: {
       'Dates, rounds, prizes, rules, the team page, the announcement bar and portal settings.',
   },
   {
+    href: '/admin/judging',
+    label: 'Judging',
+    roles: ['super_admin', 'judge'],
+    blurb: 'Score teams by round and track submitted judge scores.',
+  },
+  {
     href: '/admin/users',
     label: 'Organisers',
     roles: ['super_admin'],
