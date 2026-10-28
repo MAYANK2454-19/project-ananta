@@ -173,7 +173,7 @@ export default function AccountsAdmin() {
           onClick={() => void load()}
           disabled={loading || refreshing}
         >
-          {refreshing ? 'Refreshing…' : 'Refresh accounts'}
+          {loading || refreshing ? 'Refreshing…' : 'Refresh accounts'}
         </button>
       </header>
 
@@ -236,7 +236,7 @@ export default function AccountsAdmin() {
           {' '}Last sign-in is supplied by Supabase Auth. It does not mean a registration was
           submitted.
           {canGrant
-            ? ' You can grant an existing account an organiser role from this page once their email is verified.'
+            ? ' To grant access, choose a role in the Action column and select Grant access. The account must have a verified email. Use Organisers to invite someone new or change/deactivate existing organisers.'
             : ''}
         </p>
       </div>
