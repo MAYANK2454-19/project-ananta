@@ -76,7 +76,6 @@ export default function AuditLog() {
     <section className={styles.page}>
       <header className={styles.head}>
         <div>
-          <p className={`meta ${styles.kicker}`}>ANANTA / Admin</p>
           <h1 className={styles.title}>
             Audit <em>log.</em>
           </h1>
