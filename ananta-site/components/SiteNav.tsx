@@ -19,9 +19,7 @@ const LINKS = [
   { href: '/contest', label: 'Contest' },
 ] as const;
 
-const VISIBLE_LINKS = LINKS.filter(
-  (link) => link.href !== '/team' || TEAM_PAGE_ENABLED,
-);
+const VISIBLE_LINKS = LINKS.filter((link) => link.href !== '/team' || TEAM_PAGE_ENABLED);
 
 /**
  * Whether a Supabase session cookie is present. Only decides which link to
