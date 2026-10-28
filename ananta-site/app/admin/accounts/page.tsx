@@ -12,7 +12,8 @@ type Account = {
   emailConfirmedAt: string | null;
   lastSignInAt: string | null;
   registrationStatus: 'registered' | 'not_registered';
-  registrationSubmittedAt: string | null;
+  registrationDate: string | null;
+  registrationSource: 'website' | 'google_forms' | null;
   participantName: string | null;
   entryNumber: string | null;
   adminRole: AdminRole | null;
@@ -263,7 +264,12 @@ export default function AccountsAdmin() {
                         <>
                           <strong>Registered</strong>
                           <div className={styles.muted}>
-                            {date(account.registrationSubmittedAt)}
+                            {account.registrationSource === 'google_forms'
+                              ? 'Google Form'
+                              : 'Site registration'}
+                          </div>
+                          <div className={styles.muted}>
+                            Recorded {date(account.registrationDate)}
                           </div>
                         </>
                       ) : (
