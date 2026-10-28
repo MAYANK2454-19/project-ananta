@@ -34,7 +34,6 @@ export default async function Team() {
   return (
     <>
       <PageHead
-        label="The team"
         title={
           <>
             The people

@@ -68,6 +68,10 @@ and [redirect URL guide](https://supabase.com/docs/guides/auth/redirect-urls).
 Make sure the production callback and local callback are in Supabase's redirect
 allow-list. Default PKCE links may only complete in the browser that started the flow.
 
+**Password security:** in **Authentication > Password Security**, enable leaked-password
+protection so compromised passwords are rejected. Test signup, a controlled organiser
+invitation and password reset after changing Auth settings.
+
 ## 4. Optional: refuse non-university sign-ups at the source
 
 Registration already refuses any address outside the allowed domains (set in
@@ -80,10 +84,8 @@ on other domains need that domain added to the allowed list first.
 
 - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are required in
   production and preview.
-- `SUPABASE_SERVICE_ROLE_KEY` is required by the server-only Google Forms CSV
-  import endpoint. It must never be prefixed with `NEXT_PUBLIC_`, read from a
-  client component, or printed in logs. Keep it in production only unless a
-  preview is deliberately connected to an isolated test Supabase project.
+- `SUPABASE_SERVICE_ROLE_KEY` (or the server-only `SUPABASE_SECRET_KEY`) is used by protected server routes that need Auth Admin API access. Never prefix it with `NEXT_PUBLIC_`, read it in a client component or print it in logs. Keep the key server-side only.
+- `NEXT_PUBLIC_SITE_URL` should be `https://project-ananta.vercel.app` for production and organiser invitation callbacks; the matching `/auth/confirm` callback must be allow-listed in Supabase.
 - `ADMIN_EMAILS` is a legacy setting and is not used by the current RBAC
   middleware. Access comes from active rows in `public.admin_users`.
 - Set the final public origin consistently in Supabase Auth URL Configuration.
@@ -113,5 +115,5 @@ Redeploy after configuration or code changes.
 | Form teams, publish them to /contest | /admin/teams |
 | Write and release problem statements | /admin/problems |
 | Dates, rounds, prizes, rules, team page, announcement bar, closing the form | /admin/content |
-| Add or remove organisers | /admin/users (super admins) |
+| Find students who signed in but have not registered | /admin/accounts (organisers) |\n| Grant organiser roles to confirmed accounts | /admin/accounts (super admins) or /admin/users |\n| Invite new organisers | /admin/users (super admins); requires the invite email template |\n| Score teams by round | /admin/judging (judges and super admins) |\n| Add or remove organisers | /admin/users (super admins) |
 | Who changed what | /admin/audit (super admins) |

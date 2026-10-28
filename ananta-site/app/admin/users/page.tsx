@@ -102,6 +102,8 @@ export default function UsersAdmin() {
         error?: string;
         email?: string;
         role?: AdminRole;
+        invited?: boolean;
+        assignedExistingAccount?: boolean;
         auditLogged?: boolean;
         warning?: string;
       };
@@ -112,7 +114,9 @@ export default function UsersAdmin() {
 
       const invitedEmail = result.email ?? target;
       const invitedRole = result.role ?? inviteRole;
-      const invitationMessage = `Invitation sent to ${invitedEmail} with the ${ROLE_LABEL[invitedRole]} role.`;
+      const invitationMessage = result.assignedExistingAccount
+        ? `${invitedEmail} already had an account; the ${ROLE_LABEL[invitedRole]} role has now been assigned.`
+        : `Invitation sent to ${invitedEmail} with the ${ROLE_LABEL[invitedRole]} role.`;
 
       setInviteEmail('');
       setNotice({

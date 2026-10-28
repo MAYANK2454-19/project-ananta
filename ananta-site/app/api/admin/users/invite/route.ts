@@ -7,7 +7,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const ROLES: readonly AdminRole[] = ['super_admin', 'event_admin', 'judge'];
-const FALLBACK_SITE_URL = 'https://project-ananta-zvut.vercel.app';
+const FALLBACK_SITE_URL = 'https://project-ananta.vercel.app';
 
 function jsonError(message: string, status: number) {
   return NextResponse.json({ error: message }, { status });
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const privilegedKey =
-    process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
+    process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !privilegedKey) {
     return jsonError('The organiser invitation service is not configured.', 503);
@@ -114,8 +114,32 @@ export async function POST(request: Request) {
   if (inviteError || !inviteData.user) {
     const message = inviteError?.message ?? 'Supabase did not return an invited user.';
     if (/already (been )?registered|already exists|user exists/i.test(message)) {
+      // Existing student accounts can be promoted directly instead of forcing
+      // organisers to retry an invitation that can never succeed for that email.
+      const { error: existingRoleError } = await sessionClient.rpc('admin_set_user', {
+        target_email: email,
+        target_role: targetRole,
+        target_active: true,
+      });
+
+      if (!existingRoleError) {
+        return NextResponse.json({
+          invited: false,
+          assignedExistingAccount: true,
+          email,
+          role: targetRole,
+          auditLogged: true,
+        });
+      }
+
+      console.error('Existing account could not be assigned an organiser role:', {
+        code: existingRoleError.code,
+        message: existingRoleError.message,
+      });
       return jsonError(
-        'This email already has a Supabase account. Use Add or change an organiser to assign its role.',
+        existingRoleError.code === 'P0002'
+          ? 'The account was not found. Ask the person to create and confirm their account first.'
+          : 'This email already has a Supabase account, but role assignment failed. Use Accounts to inspect the account and try granting access there.',
         409,
       );
     }

@@ -8,7 +8,7 @@ A multi-page Next.js website for the six-week ANANTA project hackathon. Design d
 - Registration handoff: `/register`
 - Participant portal: `/signup`, `/login`, `/register/form`, `/account`, `/account/password`
 - Participant data: `/problems`, `/contest`
-- Admin: `/admin`, `/admin/dashboard`, `/admin/registrations`, `/admin/teams`, `/admin/problems`, `/admin/content`, `/admin/users`, `/admin/audit`
+- Admin: `/admin`, `/admin/dashboard`, `/admin/accounts`, `/admin/registrations`, `/admin/teams`, `/admin/problems`, `/admin/judging`, `/admin/content`, `/admin/users`, `/admin/audit`
 
 ## Run locally
 
@@ -22,7 +22,7 @@ A multi-page Next.js website for the six-week ANANTA project hackathon. Design d
 
 The current application uses the database-backed RBAC model, not the legacy `ADMIN_EMAILS` allowlist. Apply the three migration files in `supabase/migrations/` to the linked project. Confirm the migration list matches before testing the portal.
 
-Organiser accounts must exist in Supabase Auth and have an active row in `public.admin_users` with the intended role. The current UI can assign roles to existing accounts; invitation/password onboarding is being added separately. Do not expose the service-role key in browser code or preview deployments connected to production data.
+Organiser accounts need an active row in `public.admin_users` with the intended role. Super admins can invite a new organiser at `/admin/users`, or promote a confirmed existing account at `/admin/accounts`. If an invite email already has an Auth account, the invite action assigns the selected role instead of sending a duplicate invitation. The account directory also lists students who have not completed registration. Judges use `/admin/judging`; row-level security limits judges to their own scores. Do not expose the service-role key in browser code or preview deployments connected to production data.
 
 The public site ships content defaults from `content/event.ts`. Organiser edits are optional overrides in `public.site_content`. Website registrations go through the database RPCs; students must not be given direct access to the full registrations table.
 
