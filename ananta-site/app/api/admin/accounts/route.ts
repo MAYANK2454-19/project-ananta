@@ -2,6 +2,7 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { createRouteClient, isSameOrigin } from '@/lib/supabase-server';
 import type { AdminRole } from '@/lib/admin';
+import { buildAccountDirectory, type AuthDirectoryUser, type RegistrationDirectoryRow, type AdminDirectoryRow } from '@/lib/account-directory';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -9,13 +10,6 @@ export const dynamic = 'force-dynamic';
 const ROLES: readonly AdminRole[] = ['super_admin', 'event_admin', 'judge'];
 const PAGE_SIZE = 1000;
 const MAX_PAGES = 20;
-
-type RegistrationRow = {
-  user_id: string | null;
-  participant_name: string | null;
-  entry_number: string | null;
-  submitted_at: string | null;
-};
 
 function jsonError(message: string, status: number) {
   return NextResponse.json({ error: message }, { status });
@@ -114,46 +108,12 @@ export async function GET(request: Request) {
     return jsonError('Could not load registration or organiser status.', 502);
   }
 
-  const registrationByUser = new Map<string, RegistrationRow>();
-  for (const row of (registrations ?? []) as RegistrationRow[]) {
-    if (!row.user_id) continue;
-    const prior = registrationByUser.get(row.user_id);
-    if (!prior || (row.submitted_at ?? '') > (prior.submitted_at ?? '')) {
-      registrationByUser.set(row.user_id, row);
-    }
-  }
-
-  const roleByUser = new Map(
-    (adminRows ?? []).map((row) => [
-      row.user_id as string,
-      { role: row.role as AdminRole, isActive: Boolean(row.is_active) },
-    ]),
+  const accounts = buildAccountDirectory(
+    authUsers as AuthDirectoryUser[],
+    (registrations ?? []) as RegistrationDirectoryRow[],
+    (adminRows ?? []) as AdminDirectoryRow[],
+    caller.role === 'super_admin',
   );
-
-  const accounts = authUsers
-    .filter((account) => caller.role === 'super_admin' || !roleByUser.has(account.id))
-    .map((account) => {
-      const registration = registrationByUser.get(account.id);
-      const admin = roleByUser.get(account.id);
-
-      return {
-        email: account.email ?? '',
-        createdAt: account.created_at,
-        emailConfirmedAt: account.email_confirmed_at ?? account.confirmed_at ?? null,
-        lastSignInAt: account.last_sign_in_at ?? null,
-        registrationStatus: registration ? 'registered' : 'not_registered',
-        registrationSubmittedAt: registration?.submitted_at ?? null,
-        participantName: registration?.participant_name ?? null,
-        entryNumber: registration?.entry_number ?? null,
-        adminRole: admin?.role ?? null,
-        adminActive: admin?.isActive ?? null,
-      };
-    })
-    .sort((a, b) => {
-      const aTime = a.lastSignInAt ?? a.createdAt;
-      const bTime = b.lastSignInAt ?? b.createdAt;
-      return bTime.localeCompare(aTime);
-    });
 
   return NextResponse.json({
     accounts,
