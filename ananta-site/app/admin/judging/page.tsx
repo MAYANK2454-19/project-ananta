@@ -9,23 +9,66 @@ import { useAdmin } from '@/components/admin/AdminFrame';
 import styles from '@/components/admin/Admin.module.css';
 
 const ROUNDS = [
-  { id: 'ideation', label: 'Ideation', description: 'Problem definition, originality and a feasible plan.' },
-  { id: 'uiux', label: 'UI / UX', description: 'Usability, completeness of the user flow and prototype quality.' },
-  { id: 'review', label: 'Hands-on review', description: 'Working functionality, code integration, deployment and documentation.' },
-  { id: 'final', label: 'The final', description: 'Live demo, impact, product quality and answers to questions.' },
+  {
+    id: 'ideation',
+    label: 'Ideation',
+    description: 'Problem definition, originality and a feasible plan.',
+  },
+  {
+    id: 'uiux',
+    label: 'UI / UX',
+    description: 'Usability, completeness of the user flow and prototype quality.',
+  },
+  {
+    id: 'review',
+    label: 'Hands-on review',
+    description: 'Working functionality, code integration, deployment and documentation.',
+  },
+  {
+    id: 'final',
+    label: 'The final',
+    description: 'Live demo, impact, product quality and answers to questions.',
+  },
 ] as const;
 
 const CRITERIA = [
-  { key: 'problem_understanding', label: 'Problem understanding', help: 'How clearly the team understands the target problem.' },
-  { key: 'technical_execution', label: 'Technical execution', help: 'Architecture, implementation and engineering quality.' },
-  { key: 'usability', label: 'Usability', help: 'Clarity, accessibility and the end-to-end user experience.' },
-  { key: 'impact', label: 'Impact', help: 'Usefulness, originality and practical value.' },
-  { key: 'presentation', label: 'Presentation', help: 'Demonstration quality and ability to explain decisions.' },
+  {
+    key: 'problem_understanding',
+    label: 'Problem understanding',
+    help: 'How clearly the team understands the target problem.',
+  },
+  {
+    key: 'technical_execution',
+    label: 'Technical execution',
+    help: 'Architecture, implementation and engineering quality.',
+  },
+  {
+    key: 'usability',
+    label: 'Usability',
+    help: 'Clarity, accessibility and the end-to-end user experience.',
+  },
+  {
+    key: 'impact',
+    label: 'Impact',
+    help: 'Usefulness, originality and practical value.',
+  },
+  {
+    key: 'presentation',
+    label: 'Presentation',
+    help: 'Demonstration quality and ability to explain decisions.',
+  },
 ] as const;
 
 type CriterionKey = (typeof CRITERIA)[number]['key'];
 type RoundId = (typeof ROUNDS)[number]['id'];
-type Team = { id: string; code: string; name: string; project_title: string | null; status: string; is_published: boolean };
+type Team = {
+  id: string;
+  code: string;
+  name: string;
+  project_title: string | null;
+  status: string;
+  is_published: boolean;
+};
 type Score = {
   id?: string;
   team_id: string;
@@ -67,7 +110,10 @@ export default function JudgingAdmin() {
   const [scores, setScores] = useState<Record<string, Score>>({});
   const [loading, setLoading] = useState(true);
   const [busyTeam, setBusyTeam] = useState<string | null>(null);
-  const [notice, setNotice] = useState<{ kind: 'success' | 'error'; text: string } | null>(null);
+  const [notice, setNotice] = useState<{
+    kind: 'success' | 'error';
+    text: string;
+  } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -83,7 +129,8 @@ export default function JudgingAdmin() {
           .order('code'),
       ]);
 
-      if (authError || !authData.user) throw new Error('Your session expired. Sign in again.');
+      if (authError || !authData.user)
+        throw new Error('Your session expired. Sign in again.');
       if (teamResult.error) throw teamResult.error;
       const activeUserId = authData.user.id;
 
@@ -109,7 +156,10 @@ export default function JudgingAdmin() {
     } catch (error) {
       setNotice({
         kind: 'error',
-        text: friendlyError(error, 'Could not load judging data. Check that the judging migration has been applied.'),
+        text: friendlyError(
+          error,
+          'Could not load judging data. Check that the judging migration has been applied.',
+        ),
       });
     } finally {
       setLoading(false);
@@ -127,7 +177,9 @@ export default function JudgingAdmin() {
   );
 
   function updateScore(teamId: string, key: CriterionKey, value: number) {
-    const safe = Number.isFinite(value) ? Math.max(0, Math.min(10, Math.round(value))) : 0;
+    const safe = Number.isFinite(value)
+      ? Math.max(0, Math.min(10, Math.round(value)))
+      : 0;
     setScores((current) => ({
       ...current,
       [teamId]: { ...current[teamId], [key]: safe },
@@ -167,7 +219,10 @@ export default function JudgingAdmin() {
     } catch (error) {
       setNotice({
         kind: 'error',
-        text: friendlyError(error, 'Could not save this score. A submitted judge score is locked; ask a super admin if it needs reopening.'),
+        text: friendlyError(
+          error,
+          'Could not save this score. A submitted judge score is locked; ask a super admin if it needs reopening.',
+        ),
       });
     } finally {
       setBusyTeam(null);
@@ -179,16 +234,22 @@ export default function JudgingAdmin() {
       <header className={styles.head}>
         <div>
           <p className={`meta ${styles.kicker}`}>ANANTA / Admin</p>
-          <h1 className={styles.title}>Judging <em>desk.</em></h1>
+          <h1 className={styles.title}>
+            Judging <em>desk.</em>
+          </h1>
           <p className={styles.intro}>
-            Score each team for the selected round using the same five criteria. Drafts remain
-            editable; submitted scores are locked for judges and can only be reopened by a super admin.
+            Score each team for the selected round using the same five criteria. Drafts
+            remain editable; submitted scores are locked for judges and can only be
+            reopened by a super admin.
           </p>
         </div>
       </header>
 
       {notice && (
-        <p className={notice.kind === 'error' ? styles.error : styles.success} role="status">
+        <p
+          className={notice.kind === 'error' ? styles.error : styles.success}
+          role="status"
+        >
           {notice.text}
         </p>
       )}
@@ -196,15 +257,22 @@ export default function JudgingAdmin() {
       <div className={styles.card}>
         <label className={styles.field}>
           <span>Round</span>
-          <select value={round} onChange={(event) => setRound(event.target.value as RoundId)}>
+          <select
+            value={round}
+            onChange={(event) => setRound(event.target.value as RoundId)}
+          >
             {ROUNDS.map((item) => (
-              <option key={item.id} value={item.id}>{item.label}</option>
+              <option key={item.id} value={item.id}>
+                {item.label}
+              </option>
             ))}
           </select>
         </label>
         <p className={styles.muted}>{roundInfo.description}</p>
         <p className={styles.muted}>
-          {loading ? 'Loading scores…' : `${submittedCount} of ${teams.length} teams submitted for this round.`}
+          {loading
+            ? 'Loading scores…'
+            : `${submittedCount} of ${teams.length} teams submitted for this round.`}
         </p>
       </div>
 
@@ -212,10 +280,13 @@ export default function JudgingAdmin() {
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>No teams to score yet</h2>
           <p className={styles.muted}>
-            Add teams and their members after the registration review, then return here to score them.
+            Add teams and their members after the registration review, then return here to
+            score them.
           </p>
           {role !== 'judge' && (
-            <Link href="/admin/teams" className={styles.button}>Open team manager</Link>
+            <Link href="/admin/teams" className={styles.button}>
+              Open team manager
+            </Link>
           )}
         </div>
       )}
@@ -223,15 +294,22 @@ export default function JudgingAdmin() {
       <div className={styles.section}>
         {teams.map((team) => {
           const score = scores[team.id] ?? blankScore(team.id, userId, round);
-          const total = CRITERIA.reduce((sum, criterion) => sum + score[criterion.key], 0);
+          const total = CRITERIA.reduce(
+            (sum, criterion) => sum + score[criterion.key],
+            0,
+          );
           const locked = score.is_submitted && !isSuperAdmin;
           return (
             <article key={team.id} className={styles.card}>
               <div className={styles.head}>
                 <div>
-                  <p className={`meta ${styles.kicker}`}>{team.code} · {team.is_published ? 'Published' : 'Not public'}</p>
+                  <p className={`meta ${styles.kicker}`}>
+                    {team.code} · {team.is_published ? 'Published' : 'Not public'}
+                  </p>
                   <h2 className={styles.cardTitle}>{team.name}</h2>
-                  {team.project_title && <p className={styles.muted}>{team.project_title}</p>}
+                  {team.project_title && (
+                    <p className={styles.muted}>{team.project_title}</p>
+                  )}
                 </div>
                 <div>
                   <span className={`meta ${styles.kicker}`}>Total</span>
@@ -241,7 +319,11 @@ export default function JudgingAdmin() {
 
               {score.is_submitted && (
                 <p className={styles.success} role="status">
-                  Submitted {score.submitted_at ? formatDateTime(score.submitted_at) : ''}. {locked ? 'This score is locked.' : 'Super admins can adjust or reopen it.'}
+                  Submitted {score.submitted_at ? formatDateTime(score.submitted_at) : ''}
+                  .{' '}
+                  {locked
+                    ? 'This score is locked.'
+                    : 'Super admins can adjust or reopen it.'}
                 </p>
               )}
 
@@ -257,7 +339,9 @@ export default function JudgingAdmin() {
                       required
                       value={score[criterion.key]}
                       disabled={locked || busyTeam !== null}
-                      onChange={(event) => updateScore(team.id, criterion.key, Number(event.target.value))}
+                      onChange={(event) =>
+                        updateScore(team.id, criterion.key, Number(event.target.value))
+                      }
                     />
                     <small className={styles.muted}>{criterion.help}</small>
                   </label>
@@ -296,7 +380,11 @@ export default function JudgingAdmin() {
                       className={styles.button}
                       disabled={busyTeam !== null}
                       onClick={() => {
-                        if (window.confirm(`Submit the ${roundInfo.label} score for ${team.code}? Judges cannot edit it afterward.`)) {
+                        if (
+                          window.confirm(
+                            `Submit the ${roundInfo.label} score for ${team.code}? Judges cannot edit it afterward.`,
+                          )
+                        ) {
                           void saveScore(team, true);
                         }
                       }}
