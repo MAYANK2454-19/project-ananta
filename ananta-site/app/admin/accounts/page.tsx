@@ -254,7 +254,7 @@ export default function AccountsAdmin() {
                             {account.adminActive ? 'Active' : 'Deactivated'}
                           </div>
                           {canGrant && (
-                            <Link className={styles.link} href="/admin/users">Manage role</Link>
+                            <Link className="link" href="/admin/users">Manage role</Link>
                           )}
                         </>
                       ) : (
