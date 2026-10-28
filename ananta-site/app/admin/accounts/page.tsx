@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useAdmin } from '@/components/admin/AdminFrame';
 import { formatDateTime, ROLE_LABEL, type AdminRole } from '@/lib/admin';
@@ -36,6 +36,9 @@ export default function AccountsAdmin() {
   const [filter, setFilter] = useState<Filter>('all');
   const [roleDrafts, setRoleDrafts] = useState<Record<string, AdminRole>>({});
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const loadingRef = useRef(false);
   const [busyEmail, setBusyEmail] = useState<string | null>(null);
   const [notice, setNotice] = useState<{
     kind: 'success' | 'error';
@@ -43,8 +46,17 @@ export default function AccountsAdmin() {
   } | null>(null);
   const [truncated, setTruncated] = useState(false);
 
-  const load = useCallback(async () => {
-    setLoading(true);
+  const load = useCallback(async (background = false) => {
+    // Prevent the initial load, manual refresh and automatic refresh from overlapping.
+    if (loadingRef.current) return;
+    loadingRef.current = true;
+    if (background) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+      setNotice(null);
+    }
+
     try {
       const response = await fetch('/api/admin/accounts', { cache: 'no-store' });
       const result = (await response.json()) as {
@@ -56,6 +68,8 @@ export default function AccountsAdmin() {
       const rows = result.accounts ?? [];
       setAccounts(rows);
       setTruncated(Boolean(result.truncated));
+      setLastUpdated(new Date().toISOString());
+      setNotice((current) => (current?.kind === 'error' ? null : current));
       setRoleDrafts((current) => {
         const next = { ...current };
         for (const account of rows) {
@@ -69,12 +83,19 @@ export default function AccountsAdmin() {
         text: error instanceof Error ? error.message : 'Could not load accounts.',
       });
     } finally {
+      loadingRef.current = false;
       setLoading(false);
+      setRefreshing(false);
     }
   }, []);
 
   useEffect(() => {
     void load();
+    const interval = window.setInterval(() => {
+      void load(true);
+    }, 60_000);
+
+    return () => window.clearInterval(interval);
   }, [load]);
 
   const visible = useMemo(() => {
@@ -146,6 +167,14 @@ export default function AccountsAdmin() {
             the registration form. An account by itself is not an event registration.
           </p>
         </div>
+        <button
+          type="button"
+          className={styles.ghost}
+          onClick={() => void load()}
+          disabled={loading || refreshing}
+        >
+          {loading || refreshing ? 'Refreshing…' : 'Refresh accounts'}
+        </button>
       </header>
 
       {notice && (
@@ -201,6 +230,10 @@ export default function AccountsAdmin() {
             </select>
           </label>
         </div>
+        <p className={styles.muted}>
+          The directory refreshes automatically every minute. Last checked:{' '}
+          {lastUpdated ? formatDateTime(lastUpdated) : 'not yet'}.
+        </p>
         <p className={styles.muted}>
           Last sign-in is supplied by Supabase Auth. It does not mean a registration was
           submitted.
