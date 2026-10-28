@@ -51,7 +51,10 @@ test('account directory distinguishes accounts from submitted registrations', ()
 
 test('event-admin directory does not disclose existing organiser accounts', () => {
   const rows = buildAccountDirectory(users, registrations, admins, false);
-  assert.equal(rows.some((row) => row.email === 'admin@smvdu.ac.in'), false);
+  assert.equal(
+    rows.some((row) => row.email === 'admin@smvdu.ac.in'),
+    false,
+  );
 });
 
 test('super-admin directory can see organiser roles and active status', () => {

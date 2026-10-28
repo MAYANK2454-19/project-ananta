@@ -41,7 +41,8 @@ export const ADMIN_NAV: {
     href: '/admin/accounts',
     label: 'Accounts',
     roles: ORGANISERS,
-    blurb: 'Who has signed in, who has registered, and which accounts still need attention.',
+    blurb:
+      'Who has signed in, who has registered, and which accounts still need attention.',
   },
   {
     href: '/admin/teams',
