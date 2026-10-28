@@ -109,8 +109,9 @@ export async function GET(request: Request) {
   ] = await Promise.all([
     adminClient
       .from('registrations')
-      .select('user_id, participant_name, entry_number, submitted_at')
-      .not('user_id', 'is', null)
+      .select(
+        'user_id, participant_email, participant_name, entry_number, submitted_at, imported_at, source',
+      )
       .limit(10000),
     adminClient.from('admin_users').select('user_id, role, is_active'),
   ]);
