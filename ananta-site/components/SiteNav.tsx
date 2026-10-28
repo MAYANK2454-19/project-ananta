@@ -6,7 +6,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import styles from './SiteNav.module.css';
 
 // The Team page can be restored without reverting this change:
- // set NEXT_PUBLIC_SHOW_TEAM_PAGE=true in Vercel and redeploy.
+// set NEXT_PUBLIC_SHOW_TEAM_PAGE=true in Vercel and redeploy.
 const TEAM_PAGE_ENABLED = process.env.NEXT_PUBLIC_SHOW_TEAM_PAGE === 'true';
 
 const LINKS = [
