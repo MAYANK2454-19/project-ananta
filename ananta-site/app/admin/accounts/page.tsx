@@ -36,7 +36,10 @@ export default function AccountsAdmin() {
   const [roleDrafts, setRoleDrafts] = useState<Record<string, AdminRole>>({});
   const [loading, setLoading] = useState(true);
   const [busyEmail, setBusyEmail] = useState<string | null>(null);
-  const [notice, setNotice] = useState<{ kind: 'success' | 'error'; text: string } | null>(null);
+  const [notice, setNotice] = useState<{
+    kind: 'success' | 'error';
+    text: string;
+  } | null>(null);
   const [truncated, setTruncated] = useState(false);
 
   const load = useCallback(async () => {
@@ -124,7 +127,9 @@ export default function AccountsAdmin() {
     }
   }
 
-  const notRegistered = accounts.filter((account) => account.registrationStatus === 'not_registered').length;
+  const notRegistered = accounts.filter(
+    (account) => account.registrationStatus === 'not_registered',
+  ).length;
   const neverSignedIn = accounts.filter((account) => !account.lastSignInAt).length;
   const unverified = accounts.filter((account) => !account.emailConfirmedAt).length;
 
@@ -133,16 +138,21 @@ export default function AccountsAdmin() {
       <header className={styles.head}>
         <div>
           <p className={`meta ${styles.kicker}`}>ANANTA / Admin</p>
-          <h1 className={styles.title}>Participant <em>accounts.</em></h1>
+          <h1 className={styles.title}>
+            Participant <em>accounts.</em>
+          </h1>
           <p className={styles.intro}>
-            See who has created an account, verified their email, signed in, and completed the
-            registration form. An account by itself is not an event registration.
+            See who has created an account, verified their email, signed in, and completed
+            the registration form. An account by itself is not an event registration.
           </p>
         </div>
       </header>
 
       {notice && (
-        <p className={notice.kind === 'error' ? styles.error : styles.success} role="status">
+        <p
+          className={notice.kind === 'error' ? styles.error : styles.success}
+          role="status"
+        >
           {notice.text}
         </p>
       )}
@@ -179,7 +189,10 @@ export default function AccountsAdmin() {
           </label>
           <label className={styles.field}>
             <span>Show accounts</span>
-            <select value={filter} onChange={(event) => setFilter(event.target.value as Filter)}>
+            <select
+              value={filter}
+              onChange={(event) => setFilter(event.target.value as Filter)}
+            >
               <option value="all">All visible accounts</option>
               <option value="unregistered">Signed up but not registered</option>
               <option value="registered">Registration submitted</option>
@@ -189,21 +202,26 @@ export default function AccountsAdmin() {
           </label>
         </div>
         <p className={styles.muted}>
-          Last sign-in is supplied by Supabase Auth. It does not mean a registration was submitted.
-          {canGrant ? ' You can grant an existing account an organiser role from this page.' : ''}
+          Last sign-in is supplied by Supabase Auth. It does not mean a registration was
+          submitted.
+          {canGrant
+            ? ' You can grant an existing account an organiser role from this page.'
+            : ''}
         </p>
       </div>
 
       {truncated && (
         <p className={styles.notice} role="status">
-          The directory reached its safety limit. Some accounts may be outside this result; ask a
-          super admin to review the account volume.
+          The directory reached its safety limit. Some accounts may be outside this
+          result; ask a super admin to review the account volume.
         </p>
       )}
 
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>
-          {loading ? 'Loading accounts…' : `${visible.length} account${visible.length === 1 ? '' : 's'}`}
+          {loading
+            ? 'Loading accounts…'
+            : `${visible.length} account${visible.length === 1 ? '' : 's'}`}
         </h2>
         {!loading && visible.length === 0 ? (
           <p className={styles.muted}>No accounts match this filter.</p>
@@ -234,13 +252,19 @@ export default function AccountsAdmin() {
                       )}
                     </td>
                     <td>{date(account.createdAt)}</td>
-                    <td>{account.emailConfirmedAt ? date(account.emailConfirmedAt) : 'Pending'}</td>
+                    <td>
+                      {account.emailConfirmedAt
+                        ? date(account.emailConfirmedAt)
+                        : 'Pending'}
+                    </td>
                     <td>{date(account.lastSignInAt)}</td>
                     <td>
                       {account.registrationStatus === 'registered' ? (
                         <>
                           <strong>Registered</strong>
-                          <div className={styles.muted}>{date(account.registrationSubmittedAt)}</div>
+                          <div className={styles.muted}>
+                            {date(account.registrationSubmittedAt)}
+                          </div>
                         </>
                       ) : (
                         <span>Not registered</span>
@@ -254,7 +278,9 @@ export default function AccountsAdmin() {
                             {account.adminActive ? 'Active' : 'Deactivated'}
                           </div>
                           {canGrant && (
-                            <Link className="link" href="/admin/users">Manage role</Link>
+                            <Link className="link" href="/admin/users">
+                              Manage role
+                            </Link>
                           )}
                         </>
                       ) : (
@@ -277,7 +303,9 @@ export default function AccountsAdmin() {
                               aria-label={`Role to grant to ${account.email}`}
                             >
                               {ROLE_OPTIONS.map((option) => (
-                                <option key={option} value={option}>{ROLE_LABEL[option]}</option>
+                                <option key={option} value={option}>
+                                  {ROLE_LABEL[option]}
+                                </option>
                               ))}
                             </select>
                           </label>
