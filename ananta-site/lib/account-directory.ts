@@ -93,13 +93,15 @@ export function buildAccountDirectory(
         registrationByUser.get(user.id) ??
         importedRegistrationByEmail.get(email);
       const admin = roleByUser.get(user.id);
+      const registrationStatus: AccountDirectoryEntry['registrationStatus'] =
+        registration ? 'registered' : 'not_registered';
 
       return {
         email: user.email ?? '',
         createdAt: user.created_at,
         emailConfirmedAt: user.email_confirmed_at ?? user.confirmed_at ?? null,
         lastSignInAt: user.last_sign_in_at ?? null,
-        registrationStatus: registration ? 'registered' : 'not_registered',
+        registrationStatus,
         registrationDate: registration
           ? registration.submitted_at ?? registration.imported_at
           : null,
