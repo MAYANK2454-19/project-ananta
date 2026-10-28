@@ -231,17 +231,15 @@ export default function AccountsAdmin() {
           </label>
         </div>
         <p className={styles.muted}>
-          The directory checks for new accounts and sign-ins automatically every minute.
-          {lastUpdated ? ` Last checked ${formatDateTime(lastUpdated)}.` : ''}
-          {' '}Last sign-in comes from Supabase Auth; that does not prove the person
-          submitted a registration.
-          {canGrant && (
-            <>
-              {' '}To grant access, choose a role in the Action column and select Grant
-              access. The account must have a verified email. Use Organisers to invite
-              someone new or change or deactivate existing organisers.
-            </>
-          )}
+          The directory refreshes automatically every minute. Last checked:{' '}
+          {lastUpdated ? formatDateTime(lastUpdated) : 'not yet'}.
+        </p>
+        <p className={styles.muted}>
+          Last sign-in is supplied by Supabase Auth. It does not mean a registration was
+          submitted.
+          {canGrant
+            ? ' You can grant an existing account an organiser role from this page.'
+            : ''}
         </p>
       </div>
 
