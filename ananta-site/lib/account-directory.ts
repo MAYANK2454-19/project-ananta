@@ -63,12 +63,14 @@ export function buildAccountDirectory(
     .map((user) => {
       const registration = registrationByUser.get(user.id);
       const admin = roleByUser.get(user.id);
+      const registrationStatus: AccountDirectoryEntry['registrationStatus'] =
+        registration ? 'registered' : 'not_registered';
       return {
         email: user.email ?? '',
         createdAt: user.created_at,
         emailConfirmedAt: user.email_confirmed_at ?? user.confirmed_at ?? null,
         lastSignInAt: user.last_sign_in_at ?? null,
-        registrationStatus: registration ? 'registered' : 'not_registered',
+        registrationStatus,
         registrationSubmittedAt: registration?.submitted_at ?? null,
         participantName: registration?.participant_name ?? null,
         entryNumber: registration?.entry_number ?? null,
