@@ -2,7 +2,12 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { createRouteClient, isSameOrigin } from '@/lib/supabase-server';
 import type { AdminRole } from '@/lib/admin';
-import { buildAccountDirectory, type AuthDirectoryUser, type RegistrationDirectoryRow, type AdminDirectoryRow } from '@/lib/account-directory';
+import {
+  buildAccountDirectory,
+  type AuthDirectoryUser,
+  type RegistrationDirectoryRow,
+  type AdminDirectoryRow,
+} from '@/lib/account-directory';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -50,7 +55,9 @@ async function currentCaller(request: Request) {
 
   const { data: role, error: roleError } = await client.rpc('current_admin_role');
   if (roleError || !['super_admin', 'event_admin'].includes(String(role))) {
-    return { response: jsonError('Only active organisers can view participant accounts.', 403) };
+    return {
+      response: jsonError('Only active organisers can view participant accounts.', 403),
+    };
   }
 
   return { client, user, role: role as AdminRole };
@@ -67,7 +74,10 @@ export async function GET(request: Request) {
 
   const adminClient = serviceClient();
   if (!adminClient) {
-    return jsonError('The account directory service is not configured on the server.', 503);
+    return jsonError(
+      'The account directory service is not configured on the server.',
+      503,
+    );
   }
 
   const authUsers = [];
@@ -81,7 +91,10 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error('Could not list Auth accounts:', error.message);
-      return jsonError('Could not load the account directory. Check the server Auth credentials.', 502);
+      return jsonError(
+        'Could not load the account directory. Check the server Auth credentials.',
+        502,
+      );
     }
 
     authUsers.push(...data.users);
@@ -90,15 +103,17 @@ export async function GET(request: Request) {
     if (page === MAX_PAGES) truncated = true;
   }
 
-  const [{ data: registrations, error: registrationError }, { data: adminRows, error: adminError }] =
-    await Promise.all([
-      adminClient
-        .from('registrations')
-        .select('user_id, participant_name, entry_number, submitted_at')
-        .not('user_id', 'is', null)
-        .limit(10000),
-      adminClient.from('admin_users').select('user_id, role, is_active'),
-    ]);
+  const [
+    { data: registrations, error: registrationError },
+    { data: adminRows, error: adminError },
+  ] = await Promise.all([
+    adminClient
+      .from('registrations')
+      .select('user_id, participant_name, entry_number, submitted_at')
+      .not('user_id', 'is', null)
+      .limit(10000),
+    adminClient.from('admin_users').select('user_id, role, is_active'),
+  ]);
 
   if (registrationError || adminError) {
     console.error('Could not join account status:', {
@@ -115,13 +130,16 @@ export async function GET(request: Request) {
     caller.role === 'super_admin',
   );
 
-  return NextResponse.json({
-    accounts,
-    truncated,
-    count: accounts.length,
-  }, {
-    headers: { 'Cache-Control': 'private, no-store, max-age=0' },
-  });
+  return NextResponse.json(
+    {
+      accounts,
+      truncated,
+      count: accounts.length,
+    },
+    {
+      headers: { 'Cache-Control': 'private, no-store, max-age=0' },
+    },
+  );
 }
 
 /** Assign a role to an account that already exists (for example, a student account). */
@@ -157,7 +175,10 @@ export async function POST(request: Request) {
   });
 
   if (error) {
-    console.error('Could not grant organiser role:', { code: error.code, message: error.message });
+    console.error('Could not grant organiser role:', {
+      code: error.code,
+      message: error.message,
+    });
     const status = error.code === 'P0002' ? 404 : error.code === '42501' ? 403 : 400;
     return jsonError(
       error.code === 'P0002'
