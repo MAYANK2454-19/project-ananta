@@ -129,7 +129,7 @@ export default function Dashboard() {
             </Link>
           </div>
           {counts.registrations === 0 && (
-            <p className={styles.message}>
+            <p className={styles.notice}>
               No registration rows exist yet. Check participant accounts separately: a confirmed
               sign-in is not the same as a submitted entry.
             </p>
