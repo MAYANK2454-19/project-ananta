@@ -47,4 +47,49 @@ test('account directory distinguishes accounts from submitted registrations', ()
 
   assert.equal(registered.registrationStatus, 'registered');
   assert.equal(registered.participantName, 'Student A');
-  assert.equal(regis￿￿￿ֻǱ˞￿￿￿
+  assert.equal(registered.entryNumber, '25BCS001');
+  assert.equal(registered.registrationSource, 'website');
+  assert.equal(unregistered.registrationStatus, 'not_registered');
+  assert.equal(unregistered.lastSignInAt, null);
+});
+
+test('legacy Google Form submissions match accounts by email when user IDs are absent', () => {
+  const imported = {
+    user_id: null,
+    participant_email: ' B@SMVDU.AC.IN ',
+    participant_name: 'Student B',
+    entry_number: '25BCS002',
+    submitted_at: '2026-10-24T09:00:00Z',
+    imported_at: '2026-10-27T09:00:00Z',
+    source: 'google_forms',
+  };
+  const rows = buildAccountDirectory(users, [...registrations, imported], admins, false);
+  const account = rows.find((row) => row.email === 'b@smvdu.ac.in');
+
+  assert.equal(account.registrationStatus, 'registered');
+  assert.equal(account.registrationSource, 'google_forms');
+  assert.equal(account.registrationDate, '2026-10-24T09:00:00Z');
+  assert.equal(account.participantName, 'Student B');
+});
+
+test('event-admin directory does not disclose existing organiser accounts', () => {
+  const rows = buildAccountDirectory(users, registrations, admins, false);
+  assert.equal(
+    rows.some((row) => row.email === 'admin@smvdu.ac.in'),
+    false,
+  );
+});
+
+test('super-admin directory can see organiser roles and active status', () => {
+  const rows = buildAccountDirectory(users, registrations, admins, true);
+  const admin = rows.find((row) => row.email === 'admin@smvdu.ac.in');
+  assert.equal(admin.adminRole, 'event_admin');
+  assert.equal(admin.adminActive, true);
+});
+
+test('directory sorts recently active accounts first and falls back to creation date', () => {
+  const rows = buildAccountDirectory(users, registrations, admins, true);
+  assert.equal(rows[0].email, 'admin@smvdu.ac.in');
+  assert.equal(rows[1].email, 'a@smvdu.ac.in');
+  assert.equal(rows[2].email, 'b@smvdu.ac.in');
+});
