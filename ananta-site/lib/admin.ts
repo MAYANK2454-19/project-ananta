@@ -38,6 +38,12 @@ export const ADMIN_NAV: {
     blurb: 'Every entry from the site form and the Google Form: review, note, export.',
   },
   {
+    href: '/admin/accounts',
+    label: 'Accounts',
+    roles: ORGANISERS,
+    blurb: 'Who has signed in, who has registered, and which accounts still need attention.',
+  },
+  {
     href: '/admin/teams',
     label: 'Teams',
     roles: ORGANISERS,
