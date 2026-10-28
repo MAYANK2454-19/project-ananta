@@ -195,7 +195,7 @@ export default function AccountsAdmin() {
       </div>
 
       {truncated && (
-        <p className={styles.message} role="status">
+        <p className={styles.notice} role="status">
           The directory reached its safety limit. Some accounts may be outside this result; ask a
           super admin to review the account volume.
         </p>
