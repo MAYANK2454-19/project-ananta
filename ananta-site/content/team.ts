@@ -82,14 +82,6 @@ export const TEAM: Person[] = [
     school: 'SoME',
   },
   {
-    name: 'Dr. Sunanda',
-    photo: 'sunanda',
-    role: 'Head of Department, SoCSE',
-    group: 'faculty',
-    club: 'smvdu',
-    school: 'SoCSE',
-  },
-  {
     name: 'Dr. Sonika Gupta',
     photo: 'sonika-gupta',
     role: 'Faculty Coordinator',
