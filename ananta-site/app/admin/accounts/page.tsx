@@ -233,8 +233,8 @@ export default function AccountsAdmin() {
         <p className={styles.muted}>
           The directory checks for new accounts and sign-ins automatically every minute.
           {lastUpdated ? ` Last checked ${formatDateTime(lastUpdated)}.` : ''}
-          {' '}Last sign-in comes from Supabase Auth; it does not prove that registration was
-          submitted.
+          {' '}Last sign-in comes from Supabase Auth; that does not prove the person
+          submitted a registration.
           {canGrant && (
             <>
               {' '}To grant access, choose a role in the Action column and select Grant
