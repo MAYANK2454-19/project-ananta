@@ -3,7 +3,6 @@ import styles from './Hero.module.css';
 import { Cutout } from './Cutout';
 import { Stamp } from './Stamp';
 import { Strip } from './Marks';
-import { HeroSculpture } from './HeroSculpture';
 import type { SiteContent } from '@/lib/content-sections';
 
 /** "2026-10-23" -> "23.10", the poster's date style. */
@@ -45,7 +44,6 @@ export function Hero({
       </h1>
 
       <div className={styles.collage}>
-        <HeroSculpture />
         <Cutout
           slug="sangam-launch"
           sizes="(min-width: 64rem) 46vw, (min-width: 48rem) 60vw, 88vw"
