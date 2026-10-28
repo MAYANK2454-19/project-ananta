@@ -138,7 +138,6 @@ export default function AccountsAdmin() {
     <section className={styles.page}>
       <header className={styles.head}>
         <div>
-          <p className={`meta ${styles.kicker}`}>ANANTA / Admin</p>
           <h1 className={styles.title}>
             Participant <em>accounts.</em>
           </h1>
